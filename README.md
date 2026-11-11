@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Spice Soirée
 
 Spice Soirée is a browser-based React app. `src/App.js` is the route/component
@@ -17,3 +18,7 @@ The app uses React Router and CRACO; it does not use Vite or Expo.
 
 The home page navigation targets `#dining`, `#scheduler`, `#hospitality`,
 `#experiences`, and `#reviews`.
+=======
+# spicesoiree
+Where Spice Meets Pure Splendors.
+>>>>>>> origin/main
