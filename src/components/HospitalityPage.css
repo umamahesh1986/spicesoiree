@@ -1,0 +1,126 @@
+.hospitality-section {
+  padding: 58px 24px;
+  background: #fffaf6;
+}
+
+.hospitality-heading {
+  display: grid;
+  width: min(100%, 1200px);
+  grid-template-columns: 1.15fr 0.85fr;
+  align-items: end;
+  gap: 32px;
+  margin: 0 auto 24px;
+}
+
+.hospitality-heading .section-heading {
+  margin: 0;
+  text-align: left;
+}
+
+.hospitality-heading > p {
+  margin: 0 0 5px;
+  color: #71635b;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.venue-grid {
+  display: grid;
+  width: min(100%, 1200px);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin: 0 auto;
+}
+
+.venue-card {
+  overflow: hidden;
+  border: 1px solid #f1dfd0;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgb(45 32 22 / 5%);
+}
+
+.venue-image {
+  position: relative;
+  height: 180px;
+  background: #f4e3d1;
+}
+
+.venue-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.venue-image > span {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  padding: 6px 10px;
+  border: 1px solid rgb(255 255 255 / 70%);
+  border-radius: 999px;
+  color: #804016;
+  background: rgb(255 252 248 / 94%);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.venue-copy {
+  padding: 14px;
+}
+
+.venue-copy h3 {
+  margin: 0;
+  color: #29211c;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.venue-copy p {
+  margin: 9px 0 14px;
+  color: #74675f;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.venue-copy a {
+  color: #a9480e;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.venue-copy a:hover {
+  color: #e85a0c;
+}
+
+.hospitality-section > .section-more {
+  display: flex;
+  width: fit-content;
+  margin: 26px auto 0;
+}
+
+@media (max-width: 700px) {
+  .hospitality-section {
+    padding: 52px 18px;
+  }
+
+  .hospitality-heading,
+  .venue-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .venue-grid {
+    gap: 16px;
+  }
+
+  .hospitality-heading {
+    gap: 8px;
+  }
+
+  .venue-image {
+    height: 205px;
+  }
+}

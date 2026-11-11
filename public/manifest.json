@@ -1,0 +1,17 @@
+{
+  "name": "Spice Soirée | Restaurant & Luxury Hospitality",
+  "short_name": "Spice Soirée",
+  "description": "Artisanal Hyderabadi dining and royal hospitality in Miyapur, Hyderabad.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fffaf6",
+  "theme_color": "#fffaf6",
+  "icons": [
+    {
+      "src": "/images/spice-soiree-logo.jpg",
+      "sizes": "any",
+      "type": "image/jpeg",
+      "purpose": "any"
+    }
+  ]
+}

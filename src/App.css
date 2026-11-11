@@ -1,0 +1,14 @@
+.app {
+  min-height: 100vh;
+  overflow: hidden;
+  color: #211b17;
+  background: #fffaf6;
+}
+
+.app main {
+  display: block;
+}
+
+.compact-section {
+  scroll-margin-top: 100px;
+}
