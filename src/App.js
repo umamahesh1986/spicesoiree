@@ -1,28 +1,59 @@
+
 import { useLayoutEffect } from 'react'
-import { BrowserRouter, Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom'
+import {
+  BrowserRouter,
+  Navigate,
+  Outlet,
+  Route,
+  Routes,
+  useLocation,
+  useParams,
+} from 'react-router-dom'
+
 import Header from './components/Header'
 import Home from './components/Home'
 import FineDiningPage from './components/FineDiningPage'
-import RestaurantMenu from './components/RestaurantMenu'
-import BookingPage from './components/BookingPage'
+import Menu from './components/Menu'
+import PreOrderCurries from './components/PreOrderCurries'
+import FreshMeatEggs from './components/FreshMeatEggs'
+import Catering from "./components/Catering";
+import AboutUs from "./components/AboutUs";
+import Contact from "./components/Contact";
 import HospitalityPage from './components/HospitalityPage'
 import WeekOffersPage from './components/WeekOffersPage'
 import ReviewsPage from './components/ReviewsPage'
 import Footer from './components/Footer'
+
 import './App.css'
 
-function HomeScrollReset() {
+// Scroll to top on every route change
+function ScrollToTop() {
   const { pathname } = useLocation()
 
   useLayoutEffect(() => {
-    if (pathname === '/') {
-      window.scrollTo(0, 0)
-    }
+    window.scrollTo(0, 0)
   }, [pathname])
 
   return null
 }
 
+// Temporary page for pages not created yet
+function ComingSoon() {
+  const { category } = useParams()
+
+  return (
+    <main className="coming-soon">
+      <h1>
+        {category
+          ? category.replaceAll('-', ' ').toUpperCase()
+          : 'Coming Soon'}
+      </h1>
+      <p>This page is coming soon.</p>
+    </main>
+  )
+}
+
+// Home page
 function HomePage() {
   return (
     <main>
@@ -31,20 +62,13 @@ function HomePage() {
   )
 }
 
+// Common layout
 function SiteLayout() {
   return (
     <div className="app">
       <Header />
+      <ScrollToTop />
       <Outlet />
-      <Footer />
-    </div>
-  )
-}
-
-function HeaderFooterPage() {
-  return (
-    <div className="app">
-      <Header />
       <Footer />
     </div>
   )
@@ -53,20 +77,51 @@ function HeaderFooterPage() {
 function App() {
   return (
     <BrowserRouter>
-      <HomeScrollReset />
       <Routes>
         <Route element={<SiteLayout />}>
+
+          {/* Home */}
           <Route index element={<HomePage />} />
-          <Route path="fine-dining" element={<FineDiningPage />} />
-          <Route path="menu" element={<RestaurantMenu />} />
-          <Route path="daily-weekend-menu" element={<RestaurantMenu />} />
-          <Route path="booking" element={<BookingPage />} />
-          <Route path="hospitality" element={<HospitalityPage />} />
+          <Route path="home" element={<Navigate to="/" replace />} />
+
+          {/* Menu */}
+          <Route path="menu" element={<Menu />} />
+          <Route path="menu/:category" element={<Menu />} />
+          <Route path="daily-weekend-menu" element={<Menu />} />
+
+          {/* Pre-Order */}
+          <Route path="PreOrderCurries" element={<PreOrderCurries />} />
+          <Route path="PreOrderCurries/:category" element={<PreOrderCurries />} />
+
+          {/* Fresh Meat & Eggs */}
+          <Route path="FreshMeatEggs" element={<FreshMeatEggs />} />
+          <Route
+            path="FreshMeatEggs/:category"
+            element={<FreshMeatEggs />}
+          />
+
+          {/* Catering */}
+          <Route path="catering" element={<Catering />} />
+          <Route path="Catering" element={<Catering />} />
+
+          {/* About Us */}
+          <Route path="AboutUs" element={<AboutUs />} />
+          <Route path="AboutUs/:category" element={<AboutUs />} />
+
+          {/* Contact */}
+          <Route path="contact" element={<Contact />} />
+          <Route path="Contact" element={<Contact />} />
+
+          {/* Weekly Offers */}
           <Route path="weekly-offers" element={<WeekOffersPage />} />
-          <Route path="reviews" element={<ReviewsPage />} />
+
+          {/* Cart */}
+          <Route path="cart" element={<ComingSoon />} />
+
         </Route>
-        <Route path="Footer" element={<HeaderFooterPage />} />
-        <Route path="*" element={<Navigate replace to="/" />} />
+
+        {/* Invalid URL */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   )

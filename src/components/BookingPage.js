@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { mealCategories } from './FineDiningPage'
-import { restaurantMenuCategories } from './RestaurantMenu'
+
 import Location from './Location'
 import './BookingPage.css'
 
