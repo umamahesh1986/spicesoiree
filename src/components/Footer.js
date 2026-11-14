@@ -81,7 +81,7 @@ function Footer() {
           <h2>Our Location</h2>
 
           <div className="footer-location-info">
-            <span className="location-pin">📍</span>
+            <span className="location-pin"></span>
 
             <div>
               <h3>Spice Soirée Restaurant</h3>

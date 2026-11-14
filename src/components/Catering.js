@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Catering.css";
 
 const packages = [
@@ -6,16 +7,14 @@ const packages = [
     name: "Standard Menu",
     description: "Ideal for Small Gatherings",
     people: "10 – 20 People",
-    image:
-      "https://images.unsplash.com/photo-1547592180-85f173990554?w=700",
+   image: "/images/standard-menu.jpg",
     button: "View Menu",
   },
   {
     name: "Premium Menu",
     description: "Perfect for Family Functions",
     people: "20 – 50 People",
-    image:
-      "https://images.unsplash.com/photo-1563379091339-03246963d96c?w=700",
+    image: "/images/standard-menu.jpg",
     button: "View Menu",
     badge: "👑",
   },
@@ -23,8 +22,7 @@ const packages = [
     name: "Custom Menu",
     description: "Choose your own items & quantities",
     people: "50+ People",
-    image:
-      "https://images.unsplash.com/photo-1515003197210-e0cd7184f8b5?w=700",
+   image: "/images/standard-menu.jpg",
     button: "Get Quote",
     badge: "♨",
   },
@@ -50,6 +48,8 @@ const benefits = [
 ];
 
 export default function Catering() {
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     eventType: "",
     eventDate: "",
@@ -67,16 +67,20 @@ export default function Catering() {
     });
   };
 
+  // OPEN MENU WHEN PACKAGE BUTTON IS CLICKED
   const choosePackage = (name) => {
     setSelectedPackage(name);
+
     setForm((prev) => ({
       ...prev,
       preference: name,
     }));
 
-    document
-      .getElementById("catering-booking")
-      ?.scrollIntoView({ behavior: "smooth" });
+    navigate(`/menu?package=${encodeURIComponent(name)}`, {
+      state: {
+        cateringPackage: name,
+      },
+    });
   };
 
   const sendInquiry = (e) => {
@@ -111,8 +115,6 @@ Additional Requirements: ${form.requirements || "None"}
 
   return (
     <div className="catering-page">
-
-      
 
       {/* HERO BANNER */}
 
@@ -218,7 +220,11 @@ Additional Requirements: ${form.requirements || "None"}
                 )}
 
                 <div className="cat-package-image">
-                  <img src={item.image} alt={item.name} />
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    loading="lazy"
+                  />
                 </div>
 
                 <h3>{item.name}</h3>
@@ -230,6 +236,7 @@ Additional Requirements: ${form.requirements || "None"}
                 </strong>
 
                 <button
+                  type="button"
                   className="cat-package-btn"
                   onClick={() => choosePackage(item.name)}
                 >

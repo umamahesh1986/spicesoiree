@@ -1,25 +1,26 @@
 
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import './Home.css';
 
 const slides = [
   {
-    image: 'https://www.seikogrill.in/assets/gallery/biryani.png',
+    image: '/images/Malai Chicken Tikka.png',
     title: <>Biryani, Curries,<br />Starters & More...</>,
     subtitle: 'Fresh Ingredients • Authentic Taste • Hygienic Kitchen',
   },
   {
-    image: 'https://b.zmtcdn.com/data/pictures/9/18769069/dd77962c0bfb5d09ecc4f444788c4fb7.jpg',
+    image: '/images/Butter Chicken.png',
     title: <>Delicious Curries,<br />Made With Love...</>,
     subtitle: 'Fresh Ingredients • Rich Flavours • Best Quality',
   },
   {
-    image: 'https://cdn.shopify.com/s/files/1/0064/2714/8335/files/Pollo_huevos_aves_home_1024x.jpg?v=1553593550',
+    image: '/images/fresh-chicken.png',
     title: <>Fresh Meat & Eggs,<br />Quality Guaranteed...</>,
     subtitle: 'Fresh Products • Quality Meat • Daily Fresh',
   },
   {
-    image: 'https://static.wixstatic.com/media/032907_2f7afdd9f45a45e3825a740d58115ab3~mv2.png/v1/fill/w_980%2Ch_693%2Cal_c%2Cq_90%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/91e71cb7-1477-4f3d-a0b8-2d5a9e02c65d.png',
+    image: '/images/Chicken 65 Biryani.png',
     title: <>Party & Catering,<br />Celebrate With Us...</>,
     subtitle: 'Birthdays • Family Functions • Bulk Orders',
   },
@@ -27,28 +28,28 @@ const slides = [
 
 const services = [
   {
-    image: slides[0].image,
+    image: '/images/Malai Chicken Tikka.png',
     title: 'Restaurant Menu',
     description: <>Biryani, Starters, BBQ, Chinese<br />Breads & More</>,
     button: 'View Menu',
     link: '/menu',
   },
   {
-    image: slides[1].image,
+    image: '/images/Butter Chicken.png',
     title: 'Pre-Order Curries',
     description: <>Veg & Non-Veg Curries<br />(Min. 1 kg)</>,
     button: 'Pre-Order Now',
-    link: '/pre-order',
+    link: '/PreOrderCurries',
   },
   {
-    image: slides[2].image,
+    image: '/images/fresh-chicken.png',
     title: 'Fresh Meat & Eggs',
     description: <>Chicken, Boneless, Mutton,<br />Mutton Keema & Eggs</>,
     button: 'Book Now',
-    link: '/fresh-meat',
+    link: '/FreshMeatEggs',
   },
   {
-    image: slides[3].image,
+    image: '/images/Chicken 65 Biryani.png',
     title: 'Catering & Party Orders',
     description: <>Birthdays, Family Functions,<br />Events & Bulk Orders</>,
     button: 'Book Catering',
@@ -165,17 +166,17 @@ function Home() {
 
           <div className="hero-buttons">
 
-            <a href="/menu" className="hero-btn order-btn">
+            <Link to="/menu" className="hero-btn order-btn">
               🍴 Order Food Online
-            </a>
+            </Link>
 
-            <a href="/pre-order" className="hero-btn preorder-btn">
+            <Link to="/PreOrderCurries" className="hero-btn preorder-btn">
               🍲 Pre-Order Curries
-            </a>
+            </Link>
 
-            <a href="/catering" className="hero-btn catering-btn">
+            <Link to="/catering" className="hero-btn catering-btn">
               👥 Book Party / Catering
-            </a>
+            </Link>
 
           </div>
 
@@ -231,13 +232,13 @@ function Home() {
 
                 <p>{service.description}</p>
 
-                <a
-                  href={service.link}
+                <Link
+                  to={service.link}
                   className="service-button"
                 >
                   {service.button}
                   <span>›</span>
-                </a>
+                </Link>
 
               </div>
 

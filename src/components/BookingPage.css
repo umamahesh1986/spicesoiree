@@ -1,3 +1,4 @@
+
 .booking-section {
   position: relative;
   padding: 64px 24px;
@@ -288,6 +289,8 @@
   font-weight: 700;
 }
 
+/* CART ITEMS DROPDOWN */
+
 .meal-picker {
   position: relative;
 }
@@ -337,6 +340,99 @@
   background: #fff;
   box-shadow: 0 10px 24px rgb(45 32 22 / 14%);
 }
+
+/* CART ITEM DETAILS */
+
+.checkout-cart-items {
+  display: grid;
+  gap: 0;
+}
+
+.checkout-cart-dropdown-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 2px;
+  border-bottom: 1px solid #eee1d6;
+}
+
+.checkout-cart-dropdown-item:last-of-type {
+  border-bottom: none;
+}
+
+.checkout-cart-item-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.checkout-cart-item-info strong {
+  color: #4b2b1c;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.checkout-cart-item-info span {
+  color: #806d60;
+  font-size: 11px;
+}
+
+/* CART TOTAL - SINGLE PRICE DISPLAY */
+
+.checkout-cart-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  border-top: 1px solid #ead8c8;
+  margin-top: 10px;
+  padding: 12px 2px 4px;
+  color: #4b2b1c;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.checkout-cart-total strong {
+  color: #c94b0c;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.checkout-cart-empty {
+  text-align: center;
+  padding: 15px;
+  color: #806d60;
+  font-size: 11px;
+}
+
+.meal-picker-done {
+  display: block;
+  min-width: 70px;
+  margin: 9px 0 0 auto;
+  padding: 7px 12px;
+  border: 0;
+  border-radius: 5px;
+  color: #fff;
+  background: #e85a0c;
+  cursor: pointer;
+  font: inherit;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.meal-picker-trigger:focus-visible,
+.meal-picker-done:focus-visible {
+  outline: 2px solid #e85a0c;
+  outline-offset: 3px;
+}
+
+.meal-picker-done:hover {
+  background: #c94b0c;
+}
+
+/* OLD MEAL CATEGORY STYLES - KEPT */
 
 .meal-picker-title {
   margin: 0;
@@ -446,30 +542,7 @@
   font-size: 9px;
 }
 
-.meal-picker-done {
-  display: block;
-  min-width: 70px;
-  margin: 9px 0 0 auto;
-  padding: 7px 12px;
-  border: 0;
-  border-radius: 5px;
-  color: #fff;
-  background: #e85a0c;
-  cursor: pointer;
-  font: inherit;
-  font-size: 10px;
-  font-weight: 700;
-}
-
-.meal-picker-trigger:focus-visible,
-.meal-picker-done:focus-visible {
-  outline: 2px solid #e85a0c;
-  outline-offset: 3px;
-}
-
-.meal-picker-done:hover {
-  background: #c94b0c;
-}
+/* DELIVERY TIME SLOTS */
 
 .slot-options {
   display: grid;
@@ -497,6 +570,8 @@
   color: #fff;
   background: #e85a0c;
 }
+
+/* BOOKING SUBMIT */
 
 .booking-submit {
   position: relative;
@@ -539,6 +614,8 @@
   text-align: center;
 }
 
+/* TABLET */
+
 @media (max-width: 900px) {
   .booking-layout {
     grid-template-columns: 1fr;
@@ -560,6 +637,8 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+/* MOBILE */
 
 @media (max-width: 560px) {
   .booking-section {
@@ -584,4 +663,20 @@
     grid-template-columns: 1fr;
   }
 
+  .checkout-cart-dropdown-item {
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  .checkout-cart-total {
+    font-size: 11px;
+  }
+
+  .checkout-cart-total strong {
+    font-size: 14px;
+  }
+
+  .meal-picker-options {
+    max-height: 250px;
+  }
 }

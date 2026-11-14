@@ -1,60 +1,28 @@
 
-/* HEADER MAIN */
 .site-header {
   width: 100%;
-  background: #fff;
   position: sticky;
   top: 0;
   z-index: 1000;
-  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.07);
-  font-family: Arial, sans-serif;
+  background: #ffffff;
+  border-bottom: 1px solid #f1e4d9;
+  box-shadow: 0 5px 22px rgba(65, 35, 18, 0.07);
 }
 
-/* ANNOUNCEMENT BAR */
-.announcement-bar {
-  width: 100%;
-  min-height: 36px;
-  background: #641b13;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 15px;
-  font-size: 12px;
-  letter-spacing: 0.4px;
-  box-sizing: border-box;
-}
-
-.announcement-inner {
-  width: 100%;
-  max-width: 1400px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-}
-
-.announcement-location,
-.announcement-hours {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-}
-
-/* HEADER INNER */
 .header-inner {
-  max-width: 1400px;
-  min-height: 95px;
-  margin: auto;
-  padding: 10px 35px;
+  width: 100%;
+  max-width: 1450px;
+  min-height: 100px;
+  margin: 0 auto;
+  padding: 12px 35px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 25px;
-  box-sizing: border-box;
 }
 
 /* LOGO */
+
 .brand {
   display: flex;
   align-items: center;
@@ -63,234 +31,241 @@
 }
 
 .brand img {
-  width: 145px;
+  width: 175px;
   height: 75px;
   object-fit: contain;
   display: block;
 }
 
 /* NAVIGATION */
+
 .primary-nav {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 25px;
-  flex: 1;
+  gap: 23px;
 }
 
-.primary-nav > a,
+.nav-link,
 .dropdown-trigger {
-  color: #28211e;
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 600;
-  white-space: nowrap;
-  transition: color 0.3s ease;
   position: relative;
-  padding: 10px 0;
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 0;
+  color: #4a2b1d;
+  font-size: 13px;
+  font-weight: 650;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.25s ease;
 }
 
-/* BOTTOM HOVER LINE */
-.primary-nav > a::after,
-.dropdown-heading > .dropdown-trigger::after {
-  content: "";
+.nav-link::after,
+.dropdown-trigger::after {
+  content: '';
   position: absolute;
   left: 0;
-  bottom: 3px;
+  bottom: 5px;
   width: 0;
   height: 2px;
-  background: #a52a1a;
-  transition: width 0.3s ease;
+  border-radius: 5px;
+  background: #f58220;
+  transition: width 0.25s ease;
 }
 
-.primary-nav > a:hover::after,
-.primary-nav > a.active::after,
-.dropdown-heading > .dropdown-trigger:hover::after,
-.dropdown-heading > .dropdown-trigger.active::after {
+.nav-link:hover,
+.dropdown-trigger:hover,
+.nav-link.active,
+.dropdown-trigger.active {
+  color: #e66c12;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after,
+.dropdown-trigger:hover::after,
+.dropdown-trigger.active::after {
   width: 100%;
 }
 
-/* ACTIVE AND HOVER COLOR */
-.primary-nav > a:hover,
-.dropdown-trigger:hover,
-.primary-nav a.active,
-.dropdown-trigger.active {
-  color: #a52a1a;
-}
+/* DROPDOWN */
 
-/* DROPDOWN WRAPPER */
 .nav-dropdown {
   position: relative;
-  display: flex;
-  align-items: center;
-  height: 45px;
 }
 
 .dropdown-heading {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
 }
 
-/* DROPDOWN ARROW BUTTON */
 .dropdown-arrow-btn {
+  width: 23px;
+  height: 30px;
   border: none;
   background: transparent;
-  color: #28211e;
-  padding: 8px 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  color: #70442c;
   cursor: pointer;
-  font-size: 13px;
-  transition: color 0.3s ease;
-}
-
-.dropdown-arrow-btn:hover {
-  color: #a52a1a;
 }
 
 .dropdown-arrow {
   display: inline-block;
-  font-size: 12px;
-  transition: transform 0.3s ease;
+  font-size: 17px;
+  transition: transform 0.25s ease;
 }
 
-.dropdown-arrow.arrow-open {
+.arrow-open {
   transform: rotate(180deg);
 }
 
-/* DROPDOWN MENU - CLICK ONLY */
 .dropdown-menu {
   position: absolute;
-  top: 100%;
-  left: 0;
+  top: calc(100% + 10px);
+  left: -15px;
   min-width: 205px;
-  background: #fff;
-  border-top: 3px solid #a52a1a;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.13);
-  border-radius: 0 0 7px 7px;
-  padding: 8px 0;
-  display: none;
-  z-index: 1100;
-}
-
-/* Only arrow click opens dropdown */
-.nav-dropdown.dropdown-open .dropdown-menu {
-  display: block;
-}
-
-/* DROPDOWN ITEMS */
-.dropdown-menu a {
-  display: block;
-  position: relative;
-  padding: 12px 18px;
-  color: #352a25;
-  text-decoration: none;
-  font-size: 13px;
-  font-weight: 500;
+  padding: 9px;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border: 1px solid #f0dfd1;
+  border-radius: 12px;
+  box-shadow: 0 15px 35px rgba(63, 34, 17, 0.14);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
   transition: all 0.25s ease;
 }
 
-/* DROPDOWN ITEM HOVER LINE */
-.dropdown-menu a::after {
-  content: "";
-  position: absolute;
-  left: 18px;
-  bottom: 6px;
-  width: 0;
-  height: 2px;
-  background: #a52a1a;
-  transition: width 0.25s ease;
+.nav-dropdown:hover .dropdown-menu,
+.nav-dropdown.dropdown-open .dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-menu a {
+  display: block;
+  padding: 11px 13px;
+  border-radius: 7px;
+  color: #553625;
+  font-size: 12px;
+  font-weight: 550;
+  text-decoration: none;
+  transition: all 0.2s ease;
 }
 
 .dropdown-menu a:hover,
 .dropdown-menu a.active {
-  background: #fff3ed;
-  color: #a52a1a;
-  padding-left: 24px;
+  background: #fff1e5;
+  color: #e66c12;
+  padding-left: 18px;
 }
 
-.dropdown-menu a:hover::after,
-.dropdown-menu a.active::after {
-  width: 35px;
-}
+/* ACTIONS */
 
-/* HEADER ACTIONS */
 .header-actions {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 16px;
+  gap: 15px;
   flex-shrink: 0;
 }
 
-.search-button,
+/* ADMIN LOGIN */
+
+.header-login-button {
+  min-height: 42px;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid #f58220;
+  border-radius: 8px;
+  background: #f58220;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 750;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: 0 5px 13px rgba(245, 130, 32, 0.16);
+  transition: all 0.25s ease;
+}
+
+.header-login-button:hover {
+  background: #4a281a;
+  border-color: #4a281a;
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 7px 17px rgba(74, 40, 26, 0.18);
+}
+
+.login-icon {
+  font-size: 17px;
+}
+
+/* CART */
+
 .cart-button {
-  width: 40px;
-  height: 40px;
-  border: none;
-  background: transparent;
-  color: #33251f;
+  width: 43px;
+  height: 43px;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  position: relative;
-  transition: color 0.3s ease;
+  color: #4a2b1d;
+  border: 1px solid #f0dfd1;
+  border-radius: 9px;
+  background: #fffaf6;
+  text-decoration: none;
+  transition: all 0.25s ease;
 }
 
-.search-button:hover,
 .cart-button:hover {
-  color: #a52a1a;
+  color: #e66c12;
+  border-color: #f58220;
+  background: #fff1e5;
+  transform: translateY(-2px);
 }
 
-.search-button svg,
-.cart-button svg {
-  width: 21px;
-  height: 21px;
-}
-
-/* CART COUNT */
 .cart-count {
   position: absolute;
-  top: -2px;
-  right: -3px;
-  width: 17px;
-  height: 17px;
-  border-radius: 50%;
-  background: #a52a1a;
-  color: #fff;
-  font-size: 10px;
-  font-weight: 700;
+  top: -8px;
+  right: -7px;
+  min-width: 19px;
+  height: 19px;
+  padding: 0 5px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border: 2px solid #ffffff;
+  border-radius: 20px;
+  background: #f58220;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 800;
 }
 
-/* WHATSAPP BUTTON */
+/* WHATSAPP */
+
 .whatsapp-button {
-  min-height: 43px;
-  padding: 7px 15px;
-  background: #188b48;
-  color: #fff;
-  border-radius: 5px;
+  min-height: 46px;
+  padding: 5px 12px;
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 9px;
+  border: 1px solid #e8f0e7;
+  border-radius: 9px;
+  background: #f6fbf5;
+  color: #26964d;
   text-decoration: none;
-  transition: background 0.3s ease;
+  transition: all 0.25s ease;
 }
 
 .whatsapp-button:hover {
-  background: #116d38;
-}
-
-.whatsapp-button svg {
-  width: 23px;
-  height: 23px;
-  flex-shrink: 0;
+  background: #eaf7eb;
+  border-color: #a7d9ae;
+  transform: translateY(-2px);
 }
 
 .whatsapp-content {
@@ -299,31 +274,35 @@
   gap: 2px;
 }
 
-.whatsapp-content strong {
-  font-size: 12px;
-  font-weight: 700;
+.whatsapp-content small {
+  color: #6d806f;
+  font-size: 9px;
+  font-weight: 600;
 }
 
-.whatsapp-content small {
-  font-size: 10px;
+.whatsapp-content strong {
+  color: #277a3e;
+  font-size: 12px;
+  font-weight: 800;
 }
 
 /* TABLET */
-@media (max-width: 1100px) {
+
+@media (max-width: 1200px) {
   .header-inner {
-    padding: 10px 20px;
+    padding: 12px 20px;
     gap: 15px;
   }
 
   .brand img {
-    width: 115px;
+    width: 140px;
   }
 
   .primary-nav {
-    gap: 15px;
+    gap: 14px;
   }
 
-  .primary-nav > a,
+  .nav-link,
   .dropdown-trigger {
     font-size: 12px;
   }
@@ -332,26 +311,31 @@
     gap: 9px;
   }
 
+  .whatsapp-content {
+    display: none;
+  }
+
   .whatsapp-button {
-    padding: 7px 10px;
+    width: 43px;
+    height: 43px;
+    justify-content: center;
+    padding: 5px;
   }
 }
 
 /* MOBILE */
-@media (max-width: 768px) {
-  .announcement-bar {
-    font-size: 10px;
-  }
 
+@media (max-width: 850px) {
   .header-inner {
     min-height: auto;
-    padding: 10px 15px;
+    padding: 10px 16px;
     flex-wrap: wrap;
+    gap: 10px;
   }
 
   .brand img {
-    width: 110px;
-    height: 60px;
+    width: 135px;
+    height: 58px;
   }
 
   .header-actions {
@@ -359,13 +343,12 @@
   }
 
   .primary-nav {
-    width: 100%;
-    flex: 0 0 100%;
     order: 3;
+    width: 100%;
     justify-content: flex-start;
-    gap: 20px;
+    gap: 21px;
+    padding: 7px 0 3px;
     overflow-x: auto;
-    padding: 10px 0;
     scrollbar-width: none;
   }
 
@@ -373,71 +356,78 @@
     display: none;
   }
 
-  .primary-nav > a,
+  .nav-link,
   .dropdown-trigger {
     font-size: 12px;
-  }
-
-  .nav-dropdown {
-    flex-shrink: 0;
   }
 
   .dropdown-menu {
     position: absolute;
     top: 100%;
-    left: 0;
-    min-width: 180px;
   }
 
+  .header-login-button {
+    min-height: 39px;
+    padding: 0 11px;
+    font-size: 11px;
+  }
+
+  .cart-button,
   .whatsapp-button {
-    min-height: 38px;
-    padding: 6px 9px;
-  }
-
-  .whatsapp-button svg {
-    width: 19px;
-    height: 19px;
-  }
-
-  .whatsapp-content strong {
-    font-size: 10px;
-  }
-
-  .whatsapp-content small {
-    font-size: 9px;
+    width: 39px;
+    height: 39px;
   }
 }
 
 /* SMALL MOBILE */
-@media (max-width: 420px) {
-  .announcement-inner {
-    flex-direction: column;
-    gap: 5px;
+
+@media (max-width: 480px) {
+  .header-inner {
+    padding: 9px 12px;
   }
 
   .brand img {
-    width: 90px;
+    width: 115px;
+    height: 52px;
   }
 
   .header-actions {
-    gap: 5px;
+    gap: 7px;
   }
 
-  .search-button,
-  .cart-button {
-    width: 32px;
+  .header-login-button {
+    min-height: 36px;
+    padding: 0 9px;
+    gap: 5px;
+    font-size: 10px;
+  }
+
+  .login-icon {
+    font-size: 14px;
+  }
+
+  .cart-button,
+  .whatsapp-button {
+    width: 35px;
     height: 35px;
   }
 
-  .whatsapp-button {
-    padding: 6px;
-  }
-
-  .whatsapp-content {
-    display: none;
+  .cart-button svg,
+  .whatsapp-button svg {
+    width: 21px;
+    height: 21px;
   }
 
   .primary-nav {
-    gap: 16px;
+    gap: 18px;
+  }
+
+  .nav-link,
+  .dropdown-trigger {
+    font-size: 11px;
+  }
+
+  .dropdown-menu {
+    min-width: 180px;
   }
 }
