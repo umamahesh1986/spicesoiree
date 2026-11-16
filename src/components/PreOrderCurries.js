@@ -116,7 +116,7 @@ const curryCategories = [
   { name: "Special Curries", icon: "⭐" },
 ];
 
-const CART_KEY = "spiceSoireeCart";
+const CART_KEY = "spice_soiree_cart";
 
 export default function PreOrderCurries() {
   const location = useLocation();

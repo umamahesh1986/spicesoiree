@@ -1,0 +1,27 @@
+{
+  "name": "spice-soiree-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Spice Soiree REST API (Node.js + Express + MySQL)",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "db:setup": "node db/setup.js",
+    "db:seed": "node db/setup.js --seed",
+    "deploy:build": "node scripts/build-deploy.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.10",
+    "express": "^5.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^2.5.0",
+    "mysql2": "^3.24.6",
+    "sharp": "^0.35.5"
+  }
+}

@@ -1,0 +1,86 @@
+.spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 36px 16px;
+  color: #a64f17;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.spinner-inline {
+  display: inline-flex;
+  flex-direction: row;
+  width: auto;
+  padding: 0;
+  gap: 8px;
+  vertical-align: middle;
+}
+
+.spinner-ring {
+  display: inline-block;
+  border-radius: 50%;
+  border-style: solid;
+  border-color: rgba(166, 79, 23, 0.2);
+  border-top-color: #a64f17;
+  animation: spinner-rotate 0.8s linear infinite;
+}
+
+.spinner-medium .spinner-ring {
+  width: 38px;
+  height: 38px;
+  border-width: 4px;
+}
+
+.spinner-small .spinner-ring {
+  width: 16px;
+  height: 16px;
+  border-width: 2px;
+}
+
+@keyframes spinner-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner-ring {
+    animation-duration: 2.4s;
+  }
+}
+
+/* Shimmer placeholder behind item photos while they download. The <img>
+   covers it once loaded; images that fail keep showing the soft background. */
+.menu-product-image,
+.curry-card-image,
+.fm-product-image,
+.fm-cutting-image,
+.cat-package-image {
+  background-color: #f3e7da;
+  background-image: linear-gradient(100deg, #f3e7da 30%, #fbf4ec 50%, #f3e7da 70%);
+  background-size: 300% 100%;
+  animation: image-shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes image-shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: 0 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-product-image,
+  .curry-card-image,
+  .fm-product-image,
+  .fm-cutting-image,
+  .cat-package-image {
+    animation: none;
+  }
+}

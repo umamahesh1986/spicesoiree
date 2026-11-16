@@ -1,3 +1,4 @@
+
 import { useLayoutEffect } from 'react'
 import {
   BrowserRouter,
@@ -12,7 +13,6 @@ import {
 import AnnouncementBar from './components/AnnouncementBar'
 import Header from './components/Header'
 import Home from './components/Home'
-import FineDiningPage from './components/FineDiningPage'
 import Menu from './components/Menu'
 import PreOrderCurries from './components/PreOrderCurries'
 import FreshMeatEggs from './components/FreshMeatEggs'
@@ -27,9 +27,22 @@ import WeekOffersPage from './components/WeekOffersPage'
 import ReviewsPage from './components/ReviewsPage'
 import Footer from './components/Footer'
 
+import Login from './components/Login'
+import Register from './components/Register'
+
+import AdminLayout from './components/admin/AdminLayout'
+import AdminHome from './components/admin/AdminHome'
+import AdminItems from './components/admin/AdminItems'
+import AdminCustomers from './components/admin/AdminCustomers'
+import AdminOrders from './components/admin/AdminOrders'
+
+import MyOrders from './components/orders/MyOrders'
+import MyAccount from './components/MyAccount'
+
+import { AuthProvider, RequireAuth, ROLES } from './auth'
+
 import './App.css'
 
-// Scroll to top on every route change
 function ScrollToTop() {
   const { pathname } = useLocation()
 
@@ -40,7 +53,6 @@ function ScrollToTop() {
   return null
 }
 
-// Temporary page for pages not created yet
 function ComingSoon() {
   const { category } = useParams()
 
@@ -56,7 +68,6 @@ function ComingSoon() {
   )
 }
 
-// Home page
 function HomePage() {
   return (
     <main>
@@ -65,23 +76,13 @@ function HomePage() {
   )
 }
 
-// Common layout
 function SiteLayout() {
   return (
     <div className="app">
-
-      {/* Announcement Bar - Top Level */}
       <AnnouncementBar />
-
-      {/* Main Header */}
       <Header />
-
-      {/* All Page Routes */}
       <Outlet />
-
-      {/* Footer */}
       <Footer />
-
     </div>
   )
 }
@@ -89,92 +90,153 @@ function SiteLayout() {
 function App() {
   return (
     <BrowserRouter>
+      <AuthProvider>
+        <ScrollToTop />
 
-      <ScrollToTop />
+        <Routes>
 
-      <Routes>
+          {/* Customer Login and Registration */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
-        {/* Admin Login - Separate Page */}
-        <Route
-          path="/AdminLogin"
-          element={<AdminLogin />}
-        />
+          {/* Admin Login */}
+          <Route
+            path="/AdminLogin"
+            element={<AdminLogin />}
+          />
 
-        {/* Main Website Routes */}
-        <Route element={<SiteLayout />}>
+          {/* Dynamic Admin Portal */}
+          <Route
+            path="/admin"
+            element={
+              <RequireAuth role={ROLES.ADMIN}>
+                <AdminLayout />
+              </RequireAuth>
+            }
+          >
+            <Route index element={<AdminHome />} />
 
-          {/* Home */}
-          <Route index element={<HomePage />} />
+            <Route
+              path="orders"
+              element={<AdminOrders />}
+            />
+
+            <Route
+              path="menu"
+              element={<AdminItems type="menu" />}
+            />
+
+            <Route
+              path="preorder"
+              element={<AdminItems type="preorder" />}
+            />
+
+            <Route
+              path="meat"
+              element={<AdminItems type="meat" />}
+            />
+
+            <Route
+              path="customers"
+              element={<AdminCustomers />}
+            />
+
+            <Route
+              path="*"
+              element={<Navigate to="/admin" replace />}
+            />
+          </Route>
+
+          {/* Main Website */}
+          <Route element={<SiteLayout />}>
+
+            <Route index element={<HomePage />} />
+
+            <Route
+              path="home"
+              element={<Navigate to="/" replace />}
+            />
+
+            <Route path="menu" element={<Menu />} />
+            <Route path="menu/:category" element={<Menu />} />
+            <Route path="daily-weekend-menu" element={<Menu />} />
+
+            <Route
+              path="PreOrderCurries"
+              element={<PreOrderCurries />}
+            />
+
+            <Route
+              path="PreOrderCurries/:category"
+              element={<PreOrderCurries />}
+            />
+
+            <Route
+              path="FreshMeatEggs"
+              element={<FreshMeatEggs />}
+            />
+
+            <Route
+              path="FreshMeatEggs/:category"
+              element={<FreshMeatEggs />}
+            />
+
+            <Route path="catering" element={<Catering />} />
+            <Route path="Catering" element={<Catering />} />
+
+            <Route path="AboutUs" element={<AboutUs />} />
+            <Route path="AboutUs/:category" element={<AboutUs />} />
+
+            <Route path="contact" element={<Contact />} />
+            <Route path="Contact" element={<Contact />} />
+
+            <Route
+              path="weekly-offers"
+              element={<WeekOffersPage />}
+            />
+
+            <Route
+              path="cart"
+              element={<Cart />}
+            />
+
+            {/* Customer Protected Pages */}
+            <Route
+              path="booking"
+              element={
+                <RequireAuth role={ROLES.CUSTOMER}>
+                  <BookingPage />
+                </RequireAuth>
+              }
+            />
+
+            <Route
+              path="orders"
+              element={
+                <RequireAuth role={ROLES.CUSTOMER}>
+                  <MyOrders />
+                </RequireAuth>
+              }
+            />
+
+            <Route
+              path="account"
+              element={
+                <RequireAuth role={ROLES.CUSTOMER}>
+                  <MyAccount />
+                </RequireAuth>
+              }
+            />
+
+          </Route>
 
           <Route
-            path="home"
+            path="*"
             element={<Navigate to="/" replace />}
           />
 
-          {/* Menu */}
-          <Route path="menu" element={<Menu />} />
-          <Route path="menu/:category" element={<Menu />} />
-          <Route path="daily-weekend-menu" element={<Menu />} />
-
-          {/* Pre-Order */}
-          <Route
-            path="PreOrderCurries"
-            element={<PreOrderCurries />}
-          />
-
-          <Route
-            path="PreOrderCurries/:category"
-            element={<PreOrderCurries />}
-          />
-
-          {/* Fresh Meat & Eggs */}
-          <Route
-            path="FreshMeatEggs"
-            element={<FreshMeatEggs />}
-          />
-
-          <Route
-            path="FreshMeatEggs/:category"
-            element={<FreshMeatEggs />}
-          />
-
-          {/* Catering */}
-          <Route path="catering" element={<Catering />} />
-          <Route path="Catering" element={<Catering />} />
-
-          {/* About Us */}
-          <Route path="AboutUs" element={<AboutUs />} />
-          <Route path="AboutUs/:category" element={<AboutUs />} />
-
-          {/* Contact */}
-          <Route path="contact" element={<Contact />} />
-          <Route path="Contact" element={<Contact />} />
-
-          {/* Weekly Offers */}
-          <Route
-            path="weekly-offers"
-            element={<WeekOffersPage />}
-          />
-
-          {/* Cart */}
-          <Route path="cart" element={<Cart />} />
-
-          {/* Booking Page */}
-          <Route
-            path="booking"
-            element={<BookingPage />}
-          />
-
-        </Route>
-
-        {/* Invalid URL */}
-        <Route
-          path="*"
-          element={<Navigate to="/" replace />}
-        />
-
-      </Routes>
-
+        </Routes>
+      </AuthProvider>
     </BrowserRouter>
   )
 }

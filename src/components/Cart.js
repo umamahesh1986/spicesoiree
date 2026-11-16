@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { readCart, repairCart, saveCart as storeCart } from "../api";
 import "./Cart.css";
 
 const CART_KEY = "spice_soiree_cart";
@@ -10,6 +11,17 @@ function Cart() {
 
   useEffect(() => {
     loadCart();
+
+    const current = readCart();
+
+    repairCart(current).then(
+      (repaired) => {
+        if (repaired !== current) {
+          storeCart(repaired);
+        }
+      },
+      () => {}
+    );
 
     window.addEventListener("cartUpdated", loadCart);
 
@@ -111,7 +123,6 @@ function Cart() {
   return (
     <main className="cart-page">
       <div className="cart-container">
-
         {cart.length === 0 ? (
           <div className="empty-cart">
             <div className="empty-cart-icon">🛒</div>
@@ -122,18 +133,13 @@ function Cart() {
               Looks like you haven't added any delicious food yet.
             </p>
 
-            <Link
-              to="/menu"
-              className="continue-shopping"
-            >
+            <Link to="/menu" className="continue-shopping">
               Explore Menu
             </Link>
           </div>
         ) : (
           <div className="cart-layout">
-
             <section className="cart-items-section">
-
               <div className="cart-items-heading">
                 <h2>Cart Items ({cartCount})</h2>
 
@@ -156,6 +162,9 @@ function Cart() {
                       <img
                         src={item.image}
                         alt={item.name}
+                        onError={(event) => {
+                          event.currentTarget.style.display = "none";
+                        }}
                       />
                     ) : (
                       <span>🍽️</span>
@@ -208,13 +217,9 @@ function Cart() {
                 </article>
               ))}
 
-              <Link
-                to="/menu"
-                className="continue-menu"
-              >
+              <Link to="/menu" className="continue-menu">
                 ← Continue Shopping
               </Link>
-
             </section>
 
             <aside className="cart-summary">
@@ -248,10 +253,8 @@ function Cart() {
                 Proceed to Checkout
               </button>
             </aside>
-
           </div>
         )}
-
       </div>
     </main>
   );

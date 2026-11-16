@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
+import { ROLES, homeForRole, useAuth } from '../auth'
 import './Header.css'
 
 const CART_KEY = 'spice_soiree_cart'
@@ -93,6 +94,7 @@ function WhatsAppIcon() {
 
 function Header() {
   const location = useLocation()
+  const { user, logout } = useAuth()
 
   const [openDropdown, setOpenDropdown] = useState(null)
   const [cartCount, setCartCount] = useState(getCartCount)
@@ -132,6 +134,14 @@ function Header() {
       location.pathname === item.pathname ||
       location.pathname.startsWith(`${item.pathname}/`)
     )
+  }
+
+  const handleLogout = async () => {
+    try {
+      await logout()
+    } catch (error) {
+      console.error('Logout failed:', error)
+    }
   }
 
   return (
@@ -228,10 +238,34 @@ function Header() {
         {/* HEADER ACTIONS */}
         <div className="header-actions">
 
-          <Link to="/AdminLogin" className="header-login-button">
-            <span className="login-icon">♙</span>
-            <span>Admin Login</span>
-          </Link>
+          {!user ? (
+            <Link to="/login" className="header-login-button">
+              <span className="login-icon">♙</span>
+              <span>Login</span>
+            </Link>
+          ) : (
+            <>
+              <Link
+                to={homeForRole(user.role)}
+                className="header-login-button"
+              >
+                <span className="login-icon">♙</span>
+                <span>
+                  {user.role === ROLES.ADMIN
+                    ? 'Admin Portal'
+                    : 'My Account'}
+                </span>
+              </Link>
+
+              <button
+                type="button"
+                className="header-login-button"
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
+            </>
+          )}
 
           <Link to="/cart" className="cart-button">
             <CartIcon />

@@ -1,46 +1,70 @@
-import { useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 
 import Location from './Location'
+import {
+  clearCart,
+  ordersApi,
+  readCart,
+  repairCart,
+  saveCart,
+  useApi,
+  useSettings,
+  whatsappUrl,
+} from '../api'
+import { useAuth } from '../auth'
+import Spinner from './common/Spinner'
 import './BookingPage.css'
 
-const deliverySlots = [
-  '12:00 – 1:00 PM',
-  '1:00 – 2:00 PM',
-  '2:00 – 3:00 PM',
-  '3:00 – 4:00 PM',
-  '4:00 – 5:00 PM',
-  '5:00 – 6:00 PM',
-  '6:00 – 7:00 PM',
-  '7:00 – 8:00 PM',
-  '8:00 – 9:00 PM',
-  '9:00 – 10:00 PM',
-]
-
-const CART_KEY = 'spice_soiree_cart'
-
+// YYYY-MM-DD in the browser's local time (what the server expects)
 function getDateKey(date) {
-  return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
+  const pad = (n) => String(n).padStart(2, '0')
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`
+}
+
+function formatLongDate(isoDate) {
+  return new Intl.DateTimeFormat(undefined, {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+  }).format(new Date(`${isoDate}T00:00:00`))
 }
 
 function BookingPage({ compact = false }) {
   const location = useLocation()
+  const settings = useSettings()
+  const { user } = useAuth() // route is customer-only, so user is set
 
-  const [cartItems] = useState(() => {
-    if (Array.isArray(location.state?.cartItems)) {
-      return location.state.cartItems
-    }
+  // Booking slots come from GET /api/delivery-slots
+  const { data: slotData, loading: slotsLoading } = useApi('/delivery-slots')
+  const deliverySlots = slotData || []
 
-    try {
-      const savedCart = JSON.parse(
-        localStorage.getItem(CART_KEY) || '[]'
-      )
-
-      return Array.isArray(savedCart) ? savedCart : []
-    } catch {
-      return []
-    }
+  const [cartItems, setCartItems] = useState(() => {
+    const saved = readCart()
+    if (saved.length) return saved
+    return Array.isArray(location.state?.cartItems) ? location.state.cartItems : []
   })
+
+  // Carts saved before orders were stored in the database have no catalog id:
+  // match them to the menu automatically and save the repaired cart.
+  useEffect(() => {
+    let active = true
+    repairCart(cartItems).then(
+      (repaired) => {
+        if (!active || repaired === cartItems) return
+        setCartItems(repaired)
+        saveCart(repaired)
+      },
+      () => {} // catalog unavailable: the server will report the problem on submit
+    )
+    return () => {
+      active = false
+    }
+    // runs once, for the cart loaded when checkout opens
+  }, [])
+
+  // Anything still without a catalog id no longer exists on the menu
+  const outdatedItems = cartItems.filter((item) => !item.itemType || !item.itemId)
 
   const [dates] = useState(() => {
     const today = new Date()
@@ -52,15 +76,21 @@ function BookingPage({ compact = false }) {
     })
   })
 
-  const [customerName, setCustomerName] = useState('')
-  const [phone, setPhone] = useState('')
+  const [fulfilmentType, setFulfilmentType] = useState('delivery')
+  const [customerName, setCustomerName] = useState(user?.name || '')
+  const [phone, setPhone] = useState(user?.phone || '')
   const [deliveryLocation, setDeliveryLocation] = useState('')
+  const [notes, setNotes] = useState('')
   const [selectedDates, setSelectedDates] = useState([])
   const [isMealPickerOpen, setIsMealPickerOpen] = useState(
     cartItems.length > 0
   )
   const [selectedSlot, setSelectedSlot] = useState('')
   const [bookingError, setBookingError] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+  const [placedOrders, setPlacedOrders] = useState(null)
+
+  const isDelivery = fulfilmentType === 'delivery'
 
   const cartCount = cartItems.reduce(
     (total, item) => total + Number(item.quantity || 1),
@@ -86,7 +116,7 @@ function BookingPage({ compact = false }) {
     )
   }
 
-  const confirmPlan = () => {
+  const confirmPlan = async () => {
     const missingDetails = []
 
     if (!customerName.trim()) {
@@ -101,7 +131,7 @@ function BookingPage({ compact = false }) {
       missingDetails.push('a valid phone number (at least 10 digits)')
     }
 
-    if (!deliveryLocation.trim()) {
+    if (isDelivery && !deliveryLocation.trim()) {
       missingDetails.push('delivery location')
     }
 
@@ -110,11 +140,11 @@ function BookingPage({ compact = false }) {
     }
 
     if (selectedDates.length === 0) {
-      missingDetails.push('at least one delivery date')
+      missingDetails.push(isDelivery ? 'at least one delivery date' : 'at least one pickup date')
     }
 
     if (!selectedSlot) {
-      missingDetails.push('delivery time')
+      missingDetails.push(isDelivery ? 'delivery time' : 'pickup time')
     }
 
     if (missingDetails.length > 0) {
@@ -122,54 +152,66 @@ function BookingPage({ compact = false }) {
       return
     }
 
-    const formattedDates = dates
-      .filter((date) =>
-        selectedDates.includes(getDateKey(date))
+    if (outdatedItems.length > 0) {
+      setBookingError(
+        `These items are no longer on the menu. Please remove them from your cart: ${outdatedItems
+          .map((item) => `${item.name}${item.size ? ` (${item.size})` : ''}`)
+          .join(', ')}.`
       )
-      .map((date) =>
-        new Intl.DateTimeFormat(undefined, {
-          weekday: 'long',
-          day: 'numeric',
-          month: 'long',
-          year: 'numeric',
-        }).format(date)
-      )
-
-    const cartMealDetails = cartItems.map((item) => {
-      const quantity = Number(item.quantity || 1)
-      const itemTotal = Number(item.price || 0) * quantity
-
-      return [
-        `${item.name} x ${quantity}`,
-        item.cuttingOption ? `Cutting: ${item.cuttingOption}` : '',
-        `Amount: ₹${itemTotal}`,
-      ].filter(Boolean).join('\n')
-    })
-
-    const message = [
-      'Hello Spice Soiree, I would like to confirm my meal plan:',
-      '',
-      `Name: ${customerName.trim()}`,
-      `Phone: ${phone.trim()}`,
-      `Delivery location: ${deliveryLocation.trim()}`,
-      '',
-      'ORDER DETAILS:',
-      ...cartMealDetails,
-      `Total Items: ${cartCount}`,
-      `Cart Total: ₹${cartTotal}`,
-      '',
-      `Delivery date(s): ${formattedDates.join(', ')}`,
-      `Preferred booking time: ${selectedSlot}`,
-    ].join('\n')
+      return
+    }
 
     setBookingError('')
+    setSubmitting(true)
 
-    window.open(
-      `https://wa.me/919849489900?text=${encodeURIComponent(message)}`,
-      '_blank',
-      'noopener,noreferrer'
-    )
+    try {
+      // Prices are recalculated by the server from the database
+      const { orders } = await ordersApi.place({
+        fulfilmentType,
+        customerName: customerName.trim(),
+        customerPhone: phone.trim(),
+        deliveryAddress: isDelivery ? deliveryLocation.trim() : '',
+        dates: [...selectedDates].sort(),
+        timeSlot: selectedSlot,
+        notes: notes.trim(),
+        items: cartItems.map((item) => ({
+          itemType: item.itemType,
+          itemId: item.itemId,
+          size: item.size,
+          cuttingOption: item.cuttingOption || '',
+          quantity: Number(item.quantity || 1),
+        })),
+      })
+
+      clearCart()
+      setPlacedOrders(orders)
+      window.scrollTo(0, 0)
+    } catch (err) {
+      setBookingError(
+        err.status ? err.message : 'Unable to reach the server. Please try again.'
+      )
+    } finally {
+      setSubmitting(false)
+    }
   }
+
+  // Optional: also notify the restaurant on WhatsApp with the saved order numbers
+  const whatsappMessage = placedOrders
+    ? [
+        'Hello Spice Soiree, I have placed an order on the website:',
+        '',
+        ...placedOrders.map(
+          (order) =>
+            `Order ${order.orderNumber} - ${formatLongDate(order.scheduledDate)}, ${order.timeSlot} - ₹${order.total}`
+        ),
+        '',
+        `Name: ${placedOrders[0].customerName}`,
+        `Phone: ${placedOrders[0].customerPhone}`,
+        placedOrders[0].fulfilmentType === 'delivery'
+          ? `Delivery location: ${placedOrders[0].deliveryAddress}`
+          : 'I will pick up from the restaurant.',
+      ].join('\n')
+    : ''
 
   return (
     <section
@@ -218,13 +260,45 @@ function BookingPage({ compact = false }) {
         </div>
 
         <div className="booking-form">
+          {placedOrders ? (
+            <div className="booking-steps" role="status">
+              <div className="booking-step">
+                <h3 className="booking-step-label">
+                  <span>✓</span> Order placed successfully
+                </h3>
+                <p>
+                  The restaurant has received your order. You can follow its status
+                  under My Orders.
+                </p>
+                <ul>
+                  {placedOrders.map((order) => (
+                    <li key={order.id}>
+                      <strong>{order.orderNumber}</strong> – {formatLongDate(order.scheduledDate)},{' '}
+                      {order.timeSlot} – ₹{order.total} ({order.statusLabel})
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="booking-submit">
+                <Link className="button button-primary submit-booking" to="/orders">
+                  View My Orders <span aria-hidden="true">→</span>
+                </Link>
+                <p>
+                  <a href={whatsappUrl(settings, whatsappMessage)} rel="noreferrer" target="_blank">
+                    Also send the order details on WhatsApp
+                  </a>
+                </p>
+              </div>
+            </div>
+          ) : (
+          <>
           <div className="booking-steps">
 
             {/* STEP 1 */}
             <div className="booking-step">
 
               <h3 className="booking-step-label">
-                <span>1</span> Your Details &amp; Delivery Location
+                <span>1</span> Your Details &amp; {isDelivery ? 'Delivery Location' : 'Pickup'}
 
                 <svg
                   aria-hidden="true"
@@ -236,6 +310,30 @@ function BookingPage({ compact = false }) {
               </h3>
 
               <div className="customer-fields">
+
+                <div
+                  aria-label="Delivery or pickup"
+                  className="slot-options"
+                  role="group"
+                >
+                  {[
+                    ['delivery', 'Home Delivery'],
+                    ['pickup', 'Pickup from Restaurant'],
+                  ].map(([value, label]) => (
+                    <button
+                      aria-pressed={fulfilmentType === value}
+                      className={`slot-option${fulfilmentType === value ? ' selected' : ''}`}
+                      key={value}
+                      onClick={() => {
+                        setFulfilmentType(value)
+                        setBookingError('')
+                      }}
+                      type="button"
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
 
                 <label>
                   Name
@@ -266,6 +364,7 @@ function BookingPage({ compact = false }) {
                   />
                 </label>
 
+                {isDelivery && (
                 <label>
                   <span className="delivery-location-label">
                     Delivery Location
@@ -296,6 +395,17 @@ function BookingPage({ compact = false }) {
                     placeholder="Flat, building, street, area"
                     required
                     value={deliveryLocation}
+                  />
+                </label>
+                )}
+
+                <label>
+                  Notes for the restaurant (optional)
+                  <input
+                    maxLength={500}
+                    onChange={(event) => setNotes(event.target.value)}
+                    placeholder="e.g. less spicy, call on arrival"
+                    value={notes}
                   />
                 </label>
 
@@ -404,9 +514,9 @@ function BookingPage({ compact = false }) {
 
               <div className="booking-step-heading">
                 <h3>
-                  <span>3</span> Select Delivery Date(s)
+                  <span>3</span> Select {isDelivery ? 'Delivery' : 'Pickup'} Date(s)
                 </h3>
-                <small>Multi-Select Enabled</small>
+                <small>Multi-Select: one order per date</small>
               </div>
 
               <div
@@ -448,7 +558,7 @@ function BookingPage({ compact = false }) {
 
               <div className="dispatch-heading">
                 <h3 className="booking-step-label">
-                  <span>4</span> Select Preferred Booking Slot
+                  <span>4</span> Select {isDelivery ? 'Delivery' : 'Pickup'} Time Slot
                 </h3>
               </div>
 
@@ -456,6 +566,7 @@ function BookingPage({ compact = false }) {
                 aria-label="Choose a booking slot from 12 PM to 10 PM"
                 className="slot-options"
               >
+                {slotsLoading && <Spinner label="Loading time slots..." size="small" inline />}
                 {deliverySlots.map((slot) => (
                   <button
                     aria-pressed={selectedSlot === slot}
@@ -490,20 +601,30 @@ function BookingPage({ compact = false }) {
               </p>
             ) : null}
 
+            {selectedDates.length > 1 && (
+              <p className="booking-multi-note">
+                {selectedDates.length} orders will be placed, one for each date
+                (₹{cartTotal} each at current prices).
+              </p>
+            )}
+
             <button
               className="button button-primary submit-booking"
+              disabled={submitting}
               onClick={confirmPlan}
               type="button"
             >
-              Confirm Details &amp; Send to WhatsApp
+              {submitting ? 'Placing order...' : 'Place Order'}
               <span aria-hidden="true">→</span>
             </button>
 
             <p>
-              * Reschedule or cancel complimentary up to 6:00 PM prior evening. Zero delivery surcharge.
+              * You can cancel online until the kitchen starts preparing your order. Zero delivery surcharge.
             </p>
 
           </div>
+          </>
+          )}
         </div>
       </div>
     </section>
