@@ -1,4 +1,3 @@
-
 .site-header {
   width: 100%;
   position: sticky;
@@ -111,13 +110,13 @@
 .dropdown-arrow {
   display: inline-block;
   font-size: 17px;
+  transform: translateY(-6px);
   transition: transform 0.25s ease;
 }
 
 .arrow-open {
-  transform: rotate(180deg);
+  transform: translateY(-6px) rotate(180deg);
 }
-
 .dropdown-menu {
   position: absolute;
   top: calc(100% + 10px);

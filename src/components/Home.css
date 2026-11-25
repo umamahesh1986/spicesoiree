@@ -56,7 +56,6 @@
   position: absolute;
   inset: 0;
   z-index: 1;
-
   background: linear-gradient(
     90deg,
     rgba(42, 15, 0, 0.98) 0%,
@@ -192,22 +191,26 @@
 .slider-arrow {
   position: absolute;
   z-index: 5;
-  top: 42%;
+  top: 50%;
+  transform: translateY(-50%);
   width: 42px;
   height: 42px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: 2px solid #e5a526;
   border-radius: 50%;
   color: white;
   background: rgba(0, 0, 0, 0.5);
-  font-size: 35px;
-  line-height: 30px;
+  font-size: 30px;
+  line-height: 1;
   cursor: pointer;
-  transition: 0.3s;
+  transition: background 0.3s ease;
 }
 
 .slider-arrow:hover {
   background: #a51f16;
-  transform: scale(1.08);
 }
 
 .left-arrow {
@@ -466,11 +469,12 @@
     padding: 8px 10px;
   }
 
+  /* MOBILE SLIDER ARROWS */
+
   .slider-arrow {
     width: 30px;
     height: 30px;
-    font-size: 25px;
-    line-height: 20px;
+    font-size: 23px;
   }
 
   .left-arrow {
