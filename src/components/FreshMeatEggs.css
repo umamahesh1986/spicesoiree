@@ -7,7 +7,7 @@
   width: 100%;
   background: #fff;
   color: #171717;
-  font-family: Arial, sans-serif;
+  font-family: var(--font-body);
 }
 
 /* TOP BAR */
@@ -43,7 +43,7 @@
   align-items: center;
   color: #a51c12;
   text-decoration: none;
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-size: 30px;
   font-weight: 1000;
   white-space: nowrap;
@@ -123,12 +123,12 @@
 
 .fm-hero-content {
   width: 57%;
-  padding: 12px 3% 12px 4%;
+  padding: 12px 3% 12px max(35px, calc((100vw - 1600px) / 2 + 35px));
   z-index: 1;
 }
 
 .fm-hero-content h1 {
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-style: italic;
   font-size: 53px;
   margin: 0 0 3px;
@@ -139,7 +139,7 @@
 }
 
 .fm-hero-content > p {
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-weight: bold;
   font-size: 18px;
   margin: 0 0 12px;
@@ -185,7 +185,7 @@
 }
 
 .fm-hero-features strong {
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-size: 15px;
   line-height: 1.1;
 }
@@ -207,7 +207,7 @@
   background: linear-gradient(#d8323b, #940d10);
   color: white;
   text-align: center;
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-size: 25px;
   padding: 10px;
   border-radius: 18px 18px 0 0;
@@ -272,7 +272,7 @@
 
 .fm-delivery-card h2 {
   margin: 0;
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-size: 23px;
 }
 
@@ -321,7 +321,7 @@
 }
 
 .fm-product-info h3 {
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-size: 20px;
   margin: 0;
 }
@@ -458,7 +458,7 @@
 
 .fm-cutting-section > h2 {
   color: #57130d;
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-size: 22px;
   margin: 0 0 10px;
 }
@@ -503,7 +503,7 @@
 }
 
 .fm-cutting-card h3 {
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-size: 16px;
   margin: 5px 0 2px;
 }

@@ -10,14 +10,14 @@
     #250603 100%
   );
   color: #fff4df;
-  font-family: Arial, sans-serif;
+  font-family: var(--font-body);
   border-top: 4px solid #d9a62d;
 }
 
 /* FOOTER GRID */
 
 .footer-grid {
-  max-width: 1390px;
+  max-width: 1600px;
   margin: auto;
   padding: 48px 35px 40px;
   display: grid;
@@ -60,7 +60,7 @@
 .footer-column h2 {
   position: relative;
   color: #f3c85d;
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-size: 23px;
   margin: 0 0 25px;
   padding-bottom: 12px;
@@ -129,7 +129,7 @@
 }
 
 .footer-hours-card h3 {
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   color: #fff0cf;
   font-size: 20px;
   margin: 5px 0;
@@ -173,7 +173,7 @@
 
 .footer-location-info h3 {
   color: #fff0cf;
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-size: 17px;
   margin: 0 0 7px;
 }
@@ -226,7 +226,7 @@
 /* BOTTOM FOOTER */
 
 .footer-bottom {
-  max-width: 1390px;
+  max-width: 1600px;
   margin: auto;
   padding: 18px 35px;
   border-top: 1px solid #86502c;

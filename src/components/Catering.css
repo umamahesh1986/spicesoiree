@@ -7,7 +7,7 @@
   width: 100%;
   color: #171717;
   background: #fff;
-  font-family: Arial, sans-serif;
+  font-family: var(--font-body);
 }
 
 /* TOP BAR */
@@ -40,7 +40,7 @@
 .cat-logo {
   color: #a51d12;
   text-decoration: none;
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-weight: 1000;
   font-size: 30px;
   display: flex;
@@ -123,12 +123,12 @@
 
 .cat-hero-content {
   width: 59%;
-  padding: 10px 2% 8px 5%;
+  padding: 10px 2% 8px max(35px, calc((100vw - 1600px) / 2 + 35px));
   z-index: 1;
 }
 
 .cat-hero-content h1 {
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-style: italic;
   font-size: 49px;
   margin: 0;
@@ -140,7 +140,7 @@
 }
 
 .cat-hero-content > p {
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-size: 20px;
   font-weight: bold;
   text-align: center;
@@ -189,7 +189,7 @@
 }
 
 .cat-hero-features strong {
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-size: 14px;
 }
 
@@ -202,7 +202,20 @@
   padding: 17px 1.5%;
   max-width: 1600px;
   margin: auto;
-  align-items: start;
+  align-items: stretch;
+}
+
+@media (min-width: 1151px) {
+  .cat-sidebar,
+  .cat-main {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cat-delivery-card,
+  .cat-why {
+    flex: 1;
+  }
 }
 
 /* SERVICES SIDEBAR */
@@ -212,7 +225,7 @@
   background: linear-gradient(#d92e38, #970e12);
   color: white;
   text-align: center;
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-size: 25px;
   padding: 10px;
   border-radius: 17px 17px 0 0;
@@ -268,7 +281,7 @@
 }
 
 .cat-delivery-card h2 {
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-size: 23px;
   margin: 0;
 }
@@ -292,7 +305,7 @@
   background: linear-gradient(90deg, transparent, #8d1008 15%, #a81b12 85%, transparent);
   color: #ffe5a0;
   border-radius: 30px;
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-size: 27px;
   padding: 5px 0;
   white-space: nowrap;
@@ -337,7 +350,7 @@
 
 .cat-package-card h3 {
   color: #a21b10;
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-size: 23px;
   margin: 3px 0;
 }
@@ -402,7 +415,7 @@
 }
 
 .cat-why h2 {
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-size: 23px;
   color: #5c150e;
   text-align: center;
@@ -452,7 +465,7 @@
   background: linear-gradient(#c52822, #850c08);
   color: white;
   text-align: center;
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-size: 23px;
   padding: 11px 5px;
   margin: 0;

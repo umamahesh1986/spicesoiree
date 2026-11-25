@@ -12,10 +12,10 @@
 }
 
 .announcement-inner {
-  max-width: 1500px;
+  max-width: 1600px;
   height: 100%;
   margin: auto;
-  padding: 0 55px;
+  padding: 0 35px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -60,14 +60,32 @@
   line-height: 1;
 }
 
+@media (max-width: 1200px) {
+  .announcement-inner {
+    padding: 0 20px;
+  }
+}
+
+@media (max-width: 850px) {
+  .announcement-inner {
+    padding: 0 16px;
+  }
+}
+
 @media (max-width: 600px) {
   .announcement-inner {
-    padding: 0 8px;
+    padding: 0 16px;
   }
 
   .announcement-location,
   .announcement-hours {
     font-size: 9px;
     gap: 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .announcement-inner {
+    padding: 0 12px;
   }
 }

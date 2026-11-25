@@ -1,7 +1,10 @@
-@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
-
 :root {
-  font-family: "Plus Jakarta Sans", "Segoe UI", sans-serif;
+  --font-heading: "Playfair Display", Georgia, serif;
+  --font-body: "DM Sans", sans-serif;
+  --font-hero: "Bangers", sans-serif;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
   color: #211b17;
   background: #fffaf6;
   font-synthesis: none;
@@ -9,6 +12,41 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-optical-sizing: auto;
+}
+
+.hero-section .hero-content h1,
+.menu-hero .menu-hero-heading h1,
+.curry-hero .curry-hero-content h1,
+.fm-hero .fm-hero-content h1,
+.cat-hero .cat-hero-content h1,
+.about-hero .about-hero-text h1,
+.contact-hero .contact-hero-text h1 {
+  font-family: var(--font-hero);
+  font-weight: 400;
+  font-style: normal;
+  line-height: 1.05;
+  letter-spacing: 0.025em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+}
+
+p {
+  font-family: var(--font-body);
+  line-height: 1.5;
+}
+
+.curry-hero-content > p,
+.fm-hero-content > p,
+.cat-hero-content > p,
+.cat-hero-features strong,
+.fm-hero-features strong,
+.hero-features strong {
+  font-family: var(--font-body);
 }
 
 * {
@@ -26,9 +64,10 @@ body {
   margin: 0;
 }
 
-button,
-input {
-  font: inherit;
+button, input, select, textarea {
+  font-family: var(--font-body);
+  font-size: inherit;
+  line-height: 1.4;
 }
 
 button,

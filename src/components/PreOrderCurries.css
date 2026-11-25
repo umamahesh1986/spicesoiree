@@ -7,7 +7,7 @@
   width: 100%;
   background: #fff;
   color: #171717;
-  font-family: Arial, sans-serif;
+  font-family: var(--font-body);
 }
 
 /* TOP BAR */
@@ -46,7 +46,7 @@
   font-size: 30px;
   font-weight: 1000;
   white-space: nowrap;
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
 }
 
 .pre-logo small {
@@ -129,7 +129,7 @@
 
 .curry-hero-content {
   width: 65%;
-  padding: 12px 4% 15px 12%;
+  padding: 12px 4% 15px max(35px, calc((100vw - 1600px) / 2 + 35px));
   z-index: 2;
 }
 
@@ -143,14 +143,14 @@
 }
 
 .curry-hero-content h1 {
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-size: 58px;
   font-style: italic;
   margin: 0 0 3px;
 }
 
 .curry-hero-content > p {
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-weight: bold;
   font-size: 20px;
   margin: 0 0 18px;
@@ -222,7 +222,7 @@
   background: linear-gradient(#b51d14, #850d08);
   color: white;
   text-align: center;
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-size: 25px;
   padding: 12px;
   border-radius: 17px 17px 0 0;
@@ -383,7 +383,7 @@
 .curry-section-heading h2 {
   margin: 3px 0 0;
   color: #8f1008;
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-size: 32px;
   font-style: italic;
 }
@@ -474,7 +474,7 @@
 
 .curry-card-content h3 {
   color: #79140c;
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-size: 17px;
   line-height: 1.2;
   margin: 3px 0 6px;
@@ -483,7 +483,7 @@
 
 .curry-card-content p {
   color: #30241d;
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.4;
   min-height: 32px;
   margin: 0 0 9px;
@@ -520,7 +520,7 @@
 }
 
 .price-option strong {
-  font-family: Arial, sans-serif;
+  font-family: var(--font-body);
   font-size: 18px;
   font-weight: 900;
   color: #b21b10;
@@ -548,7 +548,7 @@
   border-radius: 30px;
   background: linear-gradient(135deg, #bd2117, #850c07);
   color: #fff;
-  font-family: Arial, sans-serif;
+  font-family: var(--font-body);
   font-size: 13px;
   font-weight: bold;
   cursor: pointer;

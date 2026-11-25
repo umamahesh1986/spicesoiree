@@ -9,7 +9,7 @@
   width: 100%;
   overflow: hidden;
   background: #fff8e9;
-  font-family: Arial, sans-serif;
+  font-family: var(--font-body);
 }
 
 /* =========================
@@ -18,7 +18,7 @@
 
 .hero-section {
   width: 100%;
-  height: 355px;
+  min-height: 355px;
   position: relative;
   overflow: hidden;
   display: flex;
@@ -70,15 +70,16 @@
 .hero-content {
   position: relative;
   z-index: 2;
-  width: 60%;
-  padding: 20px 15px 22px 7%;
+  width: min(60%, 960px);
+  margin-left: max(0px, calc((100% - 1600px) / 2));
+  padding: 20px 15px 50px 7%;
   text-align: center;
   color: white;
 }
 
 .hero-content h1 {
-  font-family: Georgia, serif;
-  font-size: clamp(36px, 4vw, 58px);
+  font-family: var(--font-heading);
+  font-size: clamp(36px, 4vw, 76px);
   font-weight: bold;
   font-style: italic;
   line-height: 0.98;
@@ -213,12 +214,27 @@
   background: #a51f16;
 }
 
+.slider-arrow span {
+  width: 9px;
+  height: 9px;
+  border-top: 2px solid currentColor;
+  border-right: 2px solid currentColor;
+}
+
+.left-arrow span {
+  transform: translateX(2px) rotate(-135deg);
+}
+
+.right-arrow span {
+  transform: translateX(-2px) rotate(45deg);
+}
+
 .left-arrow {
-  left: 20px;
+  left: max(20px, calc((100% - 1600px) / 2 + 20px));
 }
 
 .right-arrow {
-  right: 20px;
+  right: max(20px, calc((100% - 1600px) / 2 + 20px));
 }
 
 /* =========================
@@ -260,15 +276,16 @@
   position: relative;
   z-index: 3;
   width: 100%;
-  margin-top: -2px;
-  padding: 18px 2.5% 22px;
+  max-width: 1600px;
+  margin: -2px auto 0;
+  padding: 18px 35px 22px;
   background: #fff8e9;
   border-radius: 45px 45px 0 0;
 }
 
 .services-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
 }
 
@@ -304,7 +321,7 @@
 
 .service-info h2 {
   color: #a51f16;
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-size: clamp(16px, 1.65vw, 25px);
   line-height: 1.15;
   margin-bottom: 5px;
@@ -348,7 +365,9 @@
 ========================= */
 
 .features-section {
-  padding: 10px 2%;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 10px 35px;
   background: #fff8e9;
 }
 
@@ -429,7 +448,7 @@
 @media (max-width: 600px) {
 
   .hero-section {
-    height: 410px;
+    min-height: 410px;
   }
 
   .hero-slide-image {
@@ -443,7 +462,8 @@
 
   .hero-content {
     width: 100%;
-    padding: 30px 35px;
+    margin-left: 0;
+    padding: 30px 35px 50px;
   }
 
   .hero-content h1 {
@@ -490,13 +510,39 @@
     border-radius: 25px 25px 0 0;
   }
 
+  .features-section {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
   .services-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr);
     gap: 10px;
   }
 
+  .service-card {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    min-height: 150px;
+    text-align: left;
+  }
+
   .service-image {
-    height: 100px;
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 35%;
+    height: 100%;
+  }
+
+  .service-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: 35%;
+    padding: 10px 12px;
   }
 
   .service-info h2 {
@@ -505,10 +551,12 @@
 
   .service-info p {
     font-size: 11px;
+    min-height: 0;
   }
 
   .service-button {
-    min-width: 90%;
+    width: 50%;
+    min-width: max-content;
     font-size: 12px;
     padding: 7px;
     gap: 5px;
@@ -516,6 +564,10 @@
 
   .features-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .feature-item {
+    padding: 20px 4px;
   }
 
   .feature-item:nth-child(3) {

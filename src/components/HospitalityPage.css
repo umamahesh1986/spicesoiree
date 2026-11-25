@@ -73,7 +73,7 @@
 .venue-copy h3 {
   margin: 0;
   color: #29211c;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-heading);
   font-size: 20px;
   font-weight: 600;
 }

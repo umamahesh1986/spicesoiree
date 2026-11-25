@@ -192,9 +192,8 @@ function Header() {
                           ? 'dropdown-arrow arrow-open'
                           : 'dropdown-arrow'
                       }
-                    >
-                      ⌄
-                    </span>
+                      aria-hidden="true"
+                    />
                   </button>
                 </div>
 

@@ -1,17 +1,18 @@
 
 .about-page {
   width: 100%;
-  max-width: 1390px;
+  max-width: 1600px;
   margin: auto;
   background: #fffaf1;
   color: #17110d;
-  font-family: Arial, sans-serif;
-  overflow: hidden;
+  font-family: var(--font-body);
 }
 
 /* HERO */
 
 .about-hero {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
   min-height: 280px;
   position: relative;
   display: flex;
@@ -22,14 +23,14 @@
 
 .about-hero-text {
   width: 58%;
-  padding-left: 6%;
+  padding-left: max(35px, calc((100vw - 1600px) / 2 + 35px));
   position: relative;
   z-index: 2;
 }
 
 .about-hero-text h1 {
   color: #ffe69c;
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-size: clamp(38px, 5vw, 67px);
   font-style: italic;
   margin: 0;
@@ -38,7 +39,7 @@
 
 .about-hero-text h2 {
   color: #fff6e8;
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-size: clamp(18px, 2vw, 28px);
   font-style: italic;
   margin: 2px 0 12px;
@@ -114,7 +115,7 @@
 }
 
 .about-feature h3 {
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-size: 20px;
   margin: 0 0 5px;
 }
@@ -173,7 +174,7 @@
 
 .about-heading h2 {
   color: #7a1b0e;
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-size: 29px;
   margin: 0;
 }
@@ -245,7 +246,7 @@
 }
 
 .about-services-title h2 {
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-size: 27px;
   margin: 0;
 }

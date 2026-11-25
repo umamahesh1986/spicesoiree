@@ -13,7 +13,7 @@
   position: relative;
   overflow: hidden;
   background: #f4f5f8;
-  font-family: 'Segoe UI', Arial, sans-serif;
+  font-family: var(--font-body);
 }
 
 .admin-background-shape {

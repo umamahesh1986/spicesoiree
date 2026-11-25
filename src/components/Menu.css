@@ -1,19 +1,20 @@
 
 .restaurant-menu-page {
   width: 100%;
-  max-width: 1390px;
+  max-width: 1600px;
   margin: 0 auto;
   background: #fffaf0;
   color: #17100b;
-  font-family: Arial, Helvetica, sans-serif;
-  overflow: hidden;
+  font-family: var(--font-body);
 }
 
 /* HERO */
 
 .menu-hero {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
   min-height: 230px;
-  padding: 14px 25px 15px;
+  padding: 14px max(35px, calc((100vw - 1600px) / 2 + 35px)) 15px;
   box-sizing: border-box;
   position: relative;
   background:
@@ -44,7 +45,7 @@
 }
 
 .menu-hero-heading h1 {
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-size: clamp(35px, 4vw, 58px);
   font-style: italic;
   margin: 0;
@@ -86,7 +87,7 @@
   align-items: center;
   gap: 3px;
   padding: 5px;
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-size: 15px;
   font-weight: bold;
 }
@@ -125,7 +126,7 @@
   margin: 0;
   padding: 9px;
   text-align: center;
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-size: 25px;
   color: #fff5e4;
   background: linear-gradient(100deg, #8c1008, #c42617, #8c1008);
@@ -153,7 +154,7 @@
   text-align: left;
   cursor: pointer;
   color: #21140e;
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-size: 16px;
 }
 
@@ -194,7 +195,7 @@
 }
 
 .menu-dine-card h3 {
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-size: 20px;
   margin: 5px 0;
 }
@@ -224,7 +225,7 @@
 }
 
 .menu-section-heading h2 {
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-size: clamp(27px, 3vw, 40px);
   margin: 0 0 12px;
   text-align: center;
@@ -241,7 +242,7 @@
   padding: 8px 16px;
   background: #ffe9a9;
   border-radius: 25px;
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-size: 14px;
   font-weight: bold;
   color: #4b2308;
@@ -300,15 +301,15 @@
 
 .menu-product-details h3 {
   color: #75160d;
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-size: 17px;
-  line-height: 1.15;
+  line-height: 1.25;
   margin: 4px 0;
 }
 
 .menu-product-description {
   font-size: 13px;
-  line-height: 1.25;
+  line-height: 1.45;
   margin: 3px 0 8px;
   min-height: 32px;
 }
@@ -335,7 +336,7 @@
 }
 
 .menu-price-option span {
-  font-family: Georgia, serif;
+  font-family: var(--font-body);
   font-size: 12px;
   font-weight: bold;
 }
@@ -358,7 +359,7 @@
   border-radius: 22px;
   background: linear-gradient(100deg, #a10f08, #d21e13, #850d06);
   color: white;
-  font-family: Georgia, serif;
+  font-family: var(--font-body);
   font-size: 15px;
   font-weight: bold;
   cursor: pointer;
@@ -516,7 +517,7 @@
   }
 
   .menu-product-description {
-    font-size: 12px;
+    font-size: 13px;
   }
 
   .menu-cart-status {

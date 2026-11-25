@@ -10,7 +10,7 @@
 
 .header-inner {
   width: 100%;
-  max-width: 1450px;
+  max-width: 1600px;
   min-height: 100px;
   margin: 0 auto;
   padding: 12px 35px;
@@ -52,8 +52,10 @@
   align-items: center;
   padding: 12px 0;
   color: #4a2b1d;
+  font-family: inherit;
   font-size: 13px;
-  font-weight: 650;
+  font-weight: 600;
+  line-height: 1.4;
   text-decoration: none;
   white-space: nowrap;
   transition: color 0.25s ease;
@@ -99,8 +101,12 @@
 }
 
 .dropdown-arrow-btn {
-  width: 23px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
   height: 30px;
+  padding: 0;
   border: none;
   background: transparent;
   color: #70442c;
@@ -108,14 +114,16 @@
 }
 
 .dropdown-arrow {
-  display: inline-block;
-  font-size: 17px;
-  transform: translateY(-6px);
+  width: 7px;
+  height: 7px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
   transition: transform 0.25s ease;
 }
 
 .arrow-open {
-  transform: translateY(-6px) rotate(180deg);
+  transform: translateY(2px) rotate(225deg);
 }
 .dropdown-menu {
   position: absolute;

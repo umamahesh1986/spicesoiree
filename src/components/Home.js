@@ -35,7 +35,7 @@ const services = [
   },
   {
     image: '/images/Butter Chicken.png',
-    title: 'Pre-Order Curries',
+    title: 'Catering & Party Orders - Pre-Order Curries',
     description: <>Veg & Non-Veg Curries<br />(Min. 1 kg)</>,
     button: 'Pre-Order Now',
     link: '/PreOrderCurries',
@@ -46,13 +46,6 @@ const services = [
     description: <>Chicken, Boneless, Mutton,<br />Mutton Keema & Eggs</>,
     button: 'Book Now',
     link: '/FreshMeatEggs',
-  },
-  {
-    image: '/images/Chicken 65 Biryani.png',
-    title: 'Catering & Party Orders',
-    description: <>Birthdays, Family Functions,<br />Events & Bulk Orders</>,
-    button: 'Book Catering',
-    link: '/catering',
   },
 ];
 
@@ -116,7 +109,7 @@ function Home() {
           onClick={previousSlide}
           aria-label="Previous slide"
         >
-          ‹
+          <span aria-hidden="true" />
         </button>
 
         {/* HERO CONTENT */}
@@ -188,7 +181,7 @@ function Home() {
           onClick={nextSlide}
           aria-label="Next slide"
         >
-          ›
+          <span aria-hidden="true" />
         </button>
 
         {/* SLIDER DOTS */}
@@ -210,7 +203,7 @@ function Home() {
 
       </section>
 
-      {/* FOUR SERVICE CARDS */}
+      {/* SERVICE CARDS */}
 
       <section className="services-section">
 

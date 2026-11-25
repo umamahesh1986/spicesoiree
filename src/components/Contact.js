@@ -210,7 +210,6 @@ Message: ${form.message}`;
               <p><strong>Dinner :</strong> 05:00 PM – 10:30 PM</p>
             </div>
 
-            <div className="hours-divider"></div>
           </div>
 
         </div>
