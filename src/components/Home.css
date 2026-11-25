@@ -277,7 +277,7 @@
   z-index: 3;
   width: 100%;
   max-width: 1600px;
-  margin: -2px auto 0;
+  margin: 0 auto;
   padding: 18px 35px 22px;
   background: #fff8e9;
   border-radius: 45px 45px 0 0;
@@ -290,6 +290,8 @@
 }
 
 .service-card {
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
   border: 1.5px solid #d99a22;
   border-radius: 21px;
@@ -316,6 +318,10 @@
 /* SERVICE CONTENT */
 
 .service-info {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
   padding: 5px 5px 10px;
 }
 
@@ -324,6 +330,7 @@
   font-family: var(--font-heading);
   font-size: clamp(16px, 1.65vw, 25px);
   line-height: 1.15;
+  min-height: 2.3em;
   margin-bottom: 5px;
 }
 
@@ -342,6 +349,7 @@
   align-items: center;
   gap: 12px;
   min-width: 65%;
+  margin-top: auto;
   padding: 7px 17px;
   border-radius: 30px;
   background: linear-gradient(#db3427, #8d0805);
@@ -523,6 +531,7 @@
   .service-card {
     position: relative;
     display: flex;
+    flex-direction: row;
     align-items: stretch;
     min-height: 150px;
     text-align: left;
@@ -547,6 +556,7 @@
 
   .service-info h2 {
     font-size: 15px;
+    min-height: 0;
   }
 
   .service-info p {
