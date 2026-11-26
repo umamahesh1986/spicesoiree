@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { readCart, saveCart } from "../api";
 import "./Menu.css";
 
 const h = React.createElement;
-
-const CART_KEY = "spice_soiree_cart";
 
 // MENU CATEGORIES
 const categories = [
@@ -391,6 +390,17 @@ function Menu() {
   );
 
   const [selectedSizes, setSelectedSizes] = useState({});
+  const [cart, setCart] = useState(readCart);
+
+  useEffect(() => {
+    const syncCart = () => setCart(readCart());
+    window.addEventListener("cartUpdated", syncCart);
+    window.addEventListener("storage", syncCart);
+    return () => {
+      window.removeEventListener("cartUpdated", syncCart);
+      window.removeEventListener("storage", syncCart);
+    };
+  }, []);
 
   // HEADER CATEGORY NAVIGATION
   useEffect(() => {
@@ -422,19 +432,7 @@ function Menu() {
 
     const price = product.prices[size];
 
-    let previousCart = [];
-
-    try {
-      previousCart = JSON.parse(
-        localStorage.getItem(CART_KEY) || "[]"
-      );
-
-      if (!Array.isArray(previousCart)) {
-        previousCart = [];
-      }
-    } catch {
-      previousCart = [];
-    }
+    const previousCart = readCart();
 
     const existing = previousCart.find(
       (item) =>
@@ -450,7 +448,7 @@ function Menu() {
         item.size === size
           ? {
               ...item,
-              quantity: item.quantity + 1,
+              quantity: Number(item.quantity || 0) + 1,
             }
           : item
       );
@@ -467,13 +465,20 @@ function Menu() {
       ];
     }
 
-    localStorage.setItem(
-      CART_KEY,
-      JSON.stringify(updatedCart)
-    );
+    saveCart(updatedCart);
+  }
 
-    // UPDATE HEADER CART COUNT
-    window.dispatchEvent(new Event("cartUpdated"));
+  function decreaseQuantity(product, size) {
+    const updatedCart = readCart()
+      .map((item) =>
+        item.name === product.name && item.size === size
+          ? { ...item, quantity: Number(item.quantity || 0) - 1 }
+          : item
+      )
+      .filter((item) =>
+        item.name !== product.name || item.size !== size || Number(item.quantity) > 0
+      );
+    saveCart(updatedCart);
   }
 
   // CATEGORY TABS
@@ -498,6 +503,10 @@ function Menu() {
 
     const selectedSize =
       selectedSizes[product.name] || sizeNames[0];
+    const cartItem = cart.find(
+      (item) => item.name === product.name && item.size === selectedSize
+    );
+    const quantity = Number(cartItem?.quantity || 0);
 
     return h(
       "article",
@@ -567,7 +576,13 @@ function Menu() {
           )
         ),
 
-        h(
+        quantity > 0 ? h(
+          "div",
+          { className: "menu-quantity", "aria-label": `${product.name}, ${selectedSize} quantity` },
+          h("button", { type: "button", onClick: () => decreaseQuantity(product, selectedSize), "aria-label": `Remove one ${product.name}, ${selectedSize}` }, "−"),
+          h("span", { "aria-live": "polite" }, quantity),
+          h("button", { type: "button", onClick: () => addToCart(product), "aria-label": `Add one ${product.name}, ${selectedSize}` }, "+")
+        ) : h(
           "button",
           {
             className: "menu-add-cart",

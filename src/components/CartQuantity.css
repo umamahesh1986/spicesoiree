@@ -1,0 +1,23 @@
+.product-cart-quantity {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 36px;
+  border: 1px solid #d99a60;
+  border-radius: 22px;
+  background: #fff8f0;
+  color: #85451d;
+  font-weight: 700;
+}
+
+.product-cart-quantity button {
+  width: 44px;
+  min-height: 36px;
+  border: 0;
+  border-radius: 22px;
+  background: transparent;
+  color: inherit;
+  font-size: 20px;
+  cursor: pointer;
+}

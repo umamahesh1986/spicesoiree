@@ -122,38 +122,6 @@ function Home() {
             {slide.subtitle}
           </p>
 
-          <div className="hero-divider"></div>
-
-          {/* QUICK ACTIONS */}
-
-          <div className="quick-actions">
-
-            <div className="quick-action">
-              <span>🍃</span>
-              <strong>Dine In</strong>
-              <small>(Takeaway)</small>
-            </div>
-
-            <div className="quick-action">
-              <span>🛵</span>
-              <strong>Home</strong>
-              <small>Delivery</small>
-            </div>
-
-            <div className="quick-action">
-              <span>▦</span>
-              <strong>Pre-Order</strong>
-              <small>Curries</small>
-            </div>
-
-            <div className="quick-action">
-              <span>♨</span>
-              <strong>Party &</strong>
-              <small>Catering</small>
-            </div>
-
-          </div>
-
           {/* HERO BUTTONS */}
 
           <div className="hero-buttons">

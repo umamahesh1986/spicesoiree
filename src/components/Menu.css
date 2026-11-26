@@ -371,6 +371,31 @@
   transform: translateY(-1px);
 }
 
+.menu-quantity {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 33px;
+  margin-top: 6px;
+  border: 1px solid #d99a60;
+  border-radius: 22px;
+  color: #85451d;
+  background: #fff8f0;
+  font-weight: 700;
+}
+
+.menu-quantity button {
+  width: 40px;
+  min-height: 33px;
+  border: 0;
+  border-radius: 22px;
+  background: transparent;
+  color: inherit;
+  font-size: 20px;
+  cursor: pointer;
+}
+
 .menu-add-cart span {
   margin-right: 5px;
 }

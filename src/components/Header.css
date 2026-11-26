@@ -180,6 +180,10 @@
 
 /* ADMIN LOGIN */
 
+.header-actions .header-login-hidden {
+  display: none;
+}
+
 .header-login-button {
   min-height: 42px;
   padding: 0 16px;

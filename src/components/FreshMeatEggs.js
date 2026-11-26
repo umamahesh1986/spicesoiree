@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import CartQuantity, { useCartItems } from "./CartQuantity";
 import "./FreshMeatEggs.css";
 
 const CART_KEY = "spice_soiree_cart";
@@ -146,6 +147,7 @@ export default function FreshMeat() {
   );
 
   const [selectedCuts, setSelectedCuts] = useState({});
+  const cart = useCartItems();
   const [addedMessage, setAddedMessage] = useState("");
 
   useEffect(() => {
@@ -356,7 +358,14 @@ export default function FreshMeat() {
           {activeCategory !== "Cutting Options" && (
             <div className="fm-product-grid">
 
-              {visibleProducts.map((product) => (
+              {visibleProducts.map((product) => {
+                const selectedCut = selectedCuts[product.id] || "";
+                const cartItem = cart.find((line) =>
+                  line.name === product.name &&
+                  line.size === product.subtitle.replace(/[()]/g, "") &&
+                  (line.cuttingOption || "") === selectedCut
+                );
+                return (
                 <article
                   className="fm-product-card"
                   key={product.id}
@@ -415,18 +424,20 @@ export default function FreshMeat() {
                       </div>
                     )}
 
-                    <button
+                    {cartItem && Number(cartItem.quantity) > 0 ? (
+                      <CartQuantity item={cartItem} onIncrease={() => addToCart(product)} />
+                    ) : <button
                       className="fm-order-btn"
                       type="button"
                       onClick={() => addToCart(product)}
                     >
                       🛒 Add to Cart
-                    </button>
+                    </button>}
 
                   </div>
 
                 </article>
-              ))}
+              ); })}
 
             </div>
           )}

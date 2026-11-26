@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import CartQuantity, { useCartItems } from "./CartQuantity";
 import "./PreOrderCurries.css";
 
 // ALL CURRY IMAGES
@@ -133,6 +134,7 @@ export default function PreOrderCurries() {
   const [type, setType] = useState(getTypeFromPath);
   const [activeCategory, setActiveCategory] = useState("All");
   const [selectedSizes, setSelectedSizes] = useState({});
+  const cart = useCartItems();
   const [cartMessage, setCartMessage] = useState("");
 
   useEffect(() => {
@@ -234,7 +236,7 @@ export default function PreOrderCurries() {
         cartItem.size === selectedSize
           ? {
               ...cartItem,
-              quantity: (cartItem.quantity || 1) + 1,
+              quantity: Number(cartItem.quantity || 0) + 1,
             }
           : cartItem
       );
@@ -434,6 +436,9 @@ export default function PreOrderCurries() {
               filteredCurries.map((item) => {
                 const selectedSize =
                   selectedSizes[item.name] || "Half";
+                const cartItem = cart.find((line) =>
+                  line.name === item.name && line.size === selectedSize && !line.cuttingOption
+                );
 
                 return (
                   <article className="curry-card" key={item.name}>
@@ -482,7 +487,9 @@ export default function PreOrderCurries() {
                         )}
                       </div>
 
-                      <button
+                      {cartItem && Number(cartItem.quantity) > 0 ? (
+                        <CartQuantity item={cartItem} onIncrease={() => addToCart(item)} />
+                      ) : <button
                         type="button"
                         className="order-curry-btn"
                         onClick={() => addToCart(item)}
@@ -490,7 +497,7 @@ export default function PreOrderCurries() {
                         <span>🛒</span>
                         Add to Cart
                         <span className="add-cart-arrow">→</span>
-                      </button>
+                      </button>}
                     </div>
                   </article>
                 );

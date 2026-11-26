@@ -238,7 +238,7 @@ function Header() {
         <div className="header-actions">
 
           {!user ? (
-            <Link to="/login" className="header-login-button">
+            <Link to="/login" className="header-login-button header-login-hidden">
               <span className="login-icon">♙</span>
               <span>Login</span>
             </Link>
