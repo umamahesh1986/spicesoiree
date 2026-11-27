@@ -20,7 +20,9 @@ export default function CartQuantity({ item, onIncrease }) {
   const decrease = () => {
     const cart = readCart();
     const index = cart.findIndex((line) =>
-      line.name === item.name && line.size === item.size &&
+      (item.itemType && item.itemId
+        ? line.itemType === item.itemType && line.itemId === item.itemId
+        : line.name === item.name) && line.size === item.size &&
       (line.cuttingOption || "") === (item.cuttingOption || "")
     );
     if (index < 0) return;

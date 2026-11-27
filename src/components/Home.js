@@ -124,7 +124,7 @@ function Home() {
 
           {/* HERO BUTTONS */}
 
-          <div className="hero-buttons">
+          {/* <div className="hero-buttons">
 
             <Link to="/menu" className="hero-btn order-btn">
               🍴 Order Food Online
@@ -138,7 +138,7 @@ function Home() {
               👥 Book Party / Catering
             </Link>
 
-          </div>
+          </div> */}
 
         </div>
 

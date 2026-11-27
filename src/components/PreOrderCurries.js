@@ -1,123 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import CartQuantity, { useCartItems } from "./CartQuantity";
+import { readCart, saveCart, useApi } from "../api";
 import "./PreOrderCurries.css";
 
-// ALL CURRY IMAGES
-const images = {
-  "Paneer Butter Masala": "/images/Paneer Butter Masala.png",
-  "Kadai Paneer": "/images/Kadai Paneer.png",
-  "Mushroom Masala": "/images/Mushroom Masala.png",
-  "Kadai Mushroom": "/images/Kadai Mushroom.png",
-  "Kaju Masala": "/images/Kaju Masala.png",
-
-  "Andhra Chicken Curry": "/images/Andhra Chicken Curry.png",
-  "Butter Chicken / Kadai Chicken": "/images/Butter Chicken.png",
-  "Gongura Chicken Curry": "/images/Gongura Chicken Curry.png",
-  "Mutton Curry": "/images/Mutton Curry.png",
-  "Gongura Mutton Curry": "/images/Gongura Mutton Curry.png",
-  "Egg Masala": "/images/Egg Masala.png",
-};
-
-// NON-VEG CURRIES
-const nonVegCurries = [
-  {
-    name: "Andhra Chicken Curry",
-    description: "Freshly prepared Andhra-style chicken curry.",
-    prices: { Half: 179, Full: 299 },
-    category: "Chicken Curries",
-    image: images["Andhra Chicken Curry"],
-  },
-  {
-    name: "Butter Chicken / Kadai Chicken",
-    description: "Rich and flavourful chicken curry.",
-    prices: { Half: 199, Full: 349 },
-    category: "Chicken Curries",
-    image: images["Butter Chicken / Kadai Chicken"],
-  },
-  {
-    name: "Gongura Chicken Curry",
-    description: "Traditional chicken curry with gongura flavours.",
-    prices: { Half: 199, Full: 349 },
-    category: "Chicken Curries",
-    image: images["Gongura Chicken Curry"],
-  },
-  {
-    name: "Mutton Curry",
-    description: "Traditional mutton curry with rich spices.",
-    prices: { Half: 299, Full: 499 },
-    category: "Mutton Curries",
-    image: images["Mutton Curry"],
-  },
-  {
-    name: "Gongura Mutton Curry",
-    description: "Mutton curry prepared with gongura.",
-    prices: { Half: 329, Full: 549 },
-    category: "Mutton Curries",
-    image: images["Gongura Mutton Curry"],
-  },
-  {
-    name: "Egg Masala",
-    description: "Eggs cooked in flavourful masala gravy.",
-    prices: { Half: 119, Full: 199 },
-    category: "Egg Curries",
-    image: images["Egg Masala"],
-  },
-];
-
-// VEG CURRIES
-const vegCurries = [
-  {
-    name: "Paneer Butter Masala",
-    description: "Paneer cooked in creamy tomato gravy.",
-    prices: { Half: 169, Full: 289 },
-    category: "Veg Curries",
-    image: images["Paneer Butter Masala"],
-  },
-  {
-    name: "Kadai Paneer",
-    description: "Paneer cooked with aromatic kadai spices.",
-    prices: { Half: 179, Full: 299 },
-    category: "Veg Curries",
-    image: images["Kadai Paneer"],
-  },
-  {
-    name: "Mushroom Masala",
-    description: "Mushrooms cooked in rich masala gravy.",
-    prices: { Half: 149, Full: 249 },
-    category: "Veg Curries",
-    image: images["Mushroom Masala"],
-  },
-  {
-    name: "Kadai Mushroom",
-    description: "Mushrooms prepared with kadai spices.",
-    prices: { Half: 159, Full: 269 },
-    category: "Veg Curries",
-    image: images["Kadai Mushroom"],
-  },
-];
-
-// SPECIAL CURRIES
-const specialCurries = [
-  {
-    name: "Kaju Masala",
-    description: "Cashews cooked in delicious masala gravy.",
-    prices: { Half: 189, Full: 329 },
-    category: "Special Curries",
-    image: images["Kaju Masala"],
-  },
-];
-
-// SIDEBAR CATEGORIES
-const curryCategories = [
-  { name: "Chicken Curries", icon: "🍗" },
-  { name: "Mutton Curries", icon: "🍖" },
-  { name: "Egg Curries", icon: "🥚" },
-  { name: "Veg Curries", icon: "🥗" },
-  { name: "Special Curries", icon: "⭐" },
-];
-
-const CART_KEY = "spice_soiree_cart";
 
 export default function PreOrderCurries() {
   const location = useLocation();
@@ -127,8 +13,7 @@ export default function PreOrderCurries() {
 
     if (path.endsWith("/veg")) return "Veg Curries";
     if (path.endsWith("/special")) return "Special Curries";
-
-    
+    return "Non-Veg Curries";
   };
 
   const [type, setType] = useState(getTypeFromPath);
@@ -136,6 +21,10 @@ export default function PreOrderCurries() {
   const [selectedSizes, setSelectedSizes] = useState({});
   const cart = useCartItems();
   const [cartMessage, setCartMessage] = useState("");
+  const { data, loading, error } = useApi("/preorder");
+  const curryCategories = data?.categories || [];
+  const items = data?.items || [];
+  const curryTypes = [...new Set(curryCategories.map((c) => c.curryType).filter(Boolean))];
 
   useEffect(() => {
     setType(getTypeFromPath());
@@ -143,125 +32,20 @@ export default function PreOrderCurries() {
     setSelectedSizes({});
   }, [location.pathname]);
 
-  // SIDEBAR CATEGORY FILTER
-  const getCurries = () => {
-    if (activeCategory === "Special Curries") {
-      return specialCurries;
-    }
-
-    if (activeCategory === "Veg Curries") {
-      return vegCurries;
-    }
-
-    if (
-      activeCategory === "Chicken Curries" ||
-      activeCategory === "Mutton Curries" ||
-      activeCategory === "Egg Curries"
-    ) {
-      return nonVegCurries.filter(
-        (item) => item.category === activeCategory
-      );
-    }
-
-    if (type === "Special Curries") {
-      return specialCurries;
-    }
-
-    if (type === "Veg Curries") {
-      return vegCurries;
-    }
-
-    return nonVegCurries;
-  };
-
-  const filteredCurries = getCurries();
-
-  // CHANGE TYPE
-  const changeType = (selectedType) => {
-    setType(selectedType);
-    setActiveCategory("All");
-  };
-
-  // CHANGE SIDEBAR CATEGORY
-  const selectCategory = (category) => {
-    setActiveCategory(category);
-
-    if (
-      category === "Chicken Curries" ||
-      category === "Mutton Curries" ||
-      category === "Egg Curries"
-    ) {
-      setType("Non-Veg Curries");
-    }
-
-    if (category === "Veg Curries") {
-      setType("Veg Curries");
-    }
-
-    if (category === "Special Curries") {
-      setType("Special Curries");
-    }
-  };
-
-  // ADD TO CART
+  const filteredCurries = items.filter((item) => activeCategory === "All" ? type === "All" || item.curryType === type : item.category === activeCategory);
+  const changeType = (value) => { setType(value); setActiveCategory("All"); };
+  const selectCategory = (category) => { setActiveCategory(category.name); setType(category.curryType); };
   const addToCart = (item) => {
-    const selectedSize = selectedSizes[item.name] || "Half";
-    const selectedPrice = item.prices[selectedSize];
-
-    let existingCart = [];
-
-    try {
-      existingCart = JSON.parse(
-        localStorage.getItem(CART_KEY) || "[]"
-      );
-
-      if (!Array.isArray(existingCart)) {
-        existingCart = [];
-      }
-    } catch {
-      existingCart = [];
-    }
-
-    const existingItem = existingCart.find(
-      (cartItem) =>
-        cartItem.name === item.name &&
-        cartItem.size === selectedSize
-    );
-
-    let updatedCart;
-
-    if (existingItem) {
-      updatedCart = existingCart.map((cartItem) =>
-        cartItem.name === item.name &&
-        cartItem.size === selectedSize
-          ? {
-              ...cartItem,
-              quantity: Number(cartItem.quantity || 0) + 1,
-            }
-          : cartItem
-      );
-    } else {
-      updatedCart = [
-        ...existingCart,
-        {
-          name: item.name,
-          size: selectedSize,
-          price: selectedPrice,
-          quantity: 1,
-        },
-      ];
-    }
-
-    localStorage.setItem(CART_KEY, JSON.stringify(updatedCart));
-    window.dispatchEvent(new Event("cartUpdated"));
-
-    setCartMessage(`${item.name} added to cart`);
-
+    const size = selectedSizes[item.id] || Object.keys(item.prices)[0];
+    if (!item.inStock || !size) return;
+    const cart = readCart();
+    const index = cart.findIndex((line) => line.itemType === "preorder" && line.itemId === item.id && line.size === size);
+    if (index >= 0) cart[index] = { ...cart[index], quantity: Number(cart[index].quantity || 0) + 1 };
+    else cart.push({ itemType: "preorder", itemId: item.id, name: item.name, size, price: item.prices[size], quantity: 1, image: item.image });
+    saveCart(cart);
+    setCartMessage(item.name + " added to cart");
     window.clearTimeout(window.curryCartMessageTimer);
-
-    window.curryCartMessageTimer = window.setTimeout(() => {
-      setCartMessage("");
-    }, 2500);
+    window.curryCartMessageTimer = window.setTimeout(() => setCartMessage(""), 2500);
   };
 
   return (
@@ -311,7 +95,7 @@ export default function PreOrderCurries() {
 
         <div className="curry-hero-image">
           <img
-            src={images["Andhra Chicken Curry"]}
+            src="/images/Andhra Chicken Curry.png"
             alt="Andhra Chicken Curry"
           />
         </div>
@@ -332,7 +116,7 @@ export default function PreOrderCurries() {
                   ? "curry-category selected"
                   : "curry-category"
               }
-              onClick={() => setActiveCategory("All")}
+              onClick={() => { setActiveCategory("All"); setType("All"); }}
             >
               <span>▦</span>
               <strong>All Categories</strong>
@@ -347,13 +131,7 @@ export default function PreOrderCurries() {
                     ? "curry-category selected"
                     : "curry-category"
                 }
-                onClick={() =>
-                  selectCategory(
-                    activeCategory === category.name
-                      ? "All"
-                      : category.name
-                  )
-                }
+                onClick={() => { if (activeCategory === category.name) setActiveCategory("All"); else selectCategory(category); }}
               >
                 <span>{category.icon}</span>
                 <strong>{category.name}</strong>
@@ -384,25 +162,9 @@ export default function PreOrderCurries() {
 
           <div className="curry-controls">
             <div className="curry-type-tabs">
-              <button
-                type="button"
-                className={
-                  type === "Non-Veg Curries" ? "type-active" : ""
-                }
-                onClick={() => changeType("Non-Veg Curries")}
-              >
-                🍗 Non-Veg Curries
-              </button>
-
-              <button
-                type="button"
-                className={
-                  type === "Veg Curries" ? "type-active" : ""
-                }
-                onClick={() => changeType("Veg Curries")}
-              >
-                🥗 Veg Curries
-              </button>
+              {curryTypes.map((curryType) => (
+                <button type="button" key={curryType} className={type === curryType ? "type-active" : ""} onClick={() => changeType(curryType)}>{curryType}</button>
+              ))}
             </div>
 
             <div className="advance-notice">
@@ -417,7 +179,7 @@ export default function PreOrderCurries() {
               <h2>
                 {activeCategory !== "All"
                   ? activeCategory
-                  : type}
+                  : type === "All" ? "All Curries" : type}
               </h2>
             </div>
           </div>
@@ -432,16 +194,16 @@ export default function PreOrderCurries() {
 
           {/* CURRY CARDS */}
           <div className="curry-grid">
-            {filteredCurries.length > 0 ? (
+            {loading ? <p className="no-curries">Loading curries...</p> : error ? <p className="no-curries" role="alert">Unable to load curries. Please try again later.</p> : filteredCurries.length > 0 ? (
               filteredCurries.map((item) => {
                 const selectedSize =
-                  selectedSizes[item.name] || "Half";
+                  selectedSizes[item.id] || Object.keys(item.prices)[0];
                 const cartItem = cart.find((line) =>
-                  line.name === item.name && line.size === selectedSize && !line.cuttingOption
+                  line.itemType === "preorder" && line.itemId === item.id && line.size === selectedSize
                 );
 
                 return (
-                  <article className="curry-card" key={item.name}>
+                  <article className="curry-card" key={item.id}>
                     <div className="curry-card-image">
                       <img
                         src={item.image}
@@ -476,7 +238,7 @@ export default function PreOrderCurries() {
                               onClick={() =>
                                 setSelectedSizes((previous) => ({
                                   ...previous,
-                                  [item.name]: size,
+                                  [item.id]: size,
                                 }))
                               }
                             >
@@ -487,7 +249,9 @@ export default function PreOrderCurries() {
                         )}
                       </div>
 
-                      {cartItem && Number(cartItem.quantity) > 0 ? (
+                      {!item.inStock ? (
+                        <button type="button" className="order-curry-btn" disabled>Out of Stock</button>
+                      ) : cartItem && Number(cartItem.quantity) > 0 ? (
                         <CartQuantity item={cartItem} onIncrease={() => addToCart(item)} />
                       ) : <button
                         type="button"

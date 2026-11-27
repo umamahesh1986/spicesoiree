@@ -22,7 +22,7 @@
   position: relative;
   overflow: hidden;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   background: #321400;
 }
 
@@ -73,7 +73,7 @@
   width: min(60%, 960px);
   margin-left: max(0px, calc((100% - 1600px) / 2));
   padding: 20px 15px 50px 7%;
-  text-align: center;
+  text-align: left;
   color: white;
 }
 

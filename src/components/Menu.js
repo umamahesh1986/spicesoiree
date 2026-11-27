@@ -1,393 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { readCart, saveCart } from "../api";
+import { readCart, saveCart, useApi } from "../api";
 import "./Menu.css";
 
 const h = React.createElement;
-
-// MENU CATEGORIES
-const categories = [
-  { name: "Biryani", icon: "🍛" },
-  { name: "Starters", icon: "🍗" },
-  { name: "BBQ & Tandoori", icon: "🥘" },
-  { name: "Chinese", icon: "🍜" },
-  { name: "Indian Curries", icon: "🍲" },
-  { name: "Breads", icon: "🫓" },
-  { name: "All Items", icon: "▦" },
-];
-
-// INDIVIDUAL PRODUCT IMAGES
-const images = {
-  // BIRYANI
-  "Chicken Dum Biryani": "/images/Chicken Dum Biryani.png",
-  "Chicken Fry Piece Biryani": "/images/Chicken Fry Piece Biryani.png",
-  "Chicken 65 Biryani": "/images/Chicken 65 Biryani.png",
-  "Paneer Biryani": "/images/Paneer Biryani.png",
-  "Mushroom Biryani": "/images/Mushroom Biryani.png",
-  "Gongura Chicken Biryani": "/images/Gongura Chicken Biryani.png",
-
-  // CHICKEN STARTERS
-  "Chicken – 65 / Manchurian": "/images/Chicken 65.png",
-  "Chicken – Chilli / Ginger": "/images/Chicken Chilli.png",
-  "Chicken – Majestic / Pepper / Dragon / 555": "/images/Chicken Majestic.png",
-  "Chicken Lollipop (3 pcs / 6 pcs)": "/images/Chicken Lollipop.png",
-
-  // CHICKEN PAKODA
-  "Bone-in Chicken Pakoda": "/images/Bone-in Chicken Pakoda.png",
-  "Boneless Chicken Pakoda": "/images/Boneless Chicken Pakoda.png",
-
-  // GOBI
-  "Gobi Manchurian": "/images/Gobi Manchurian.png",
-  "Gobi – Chilli / 65": "/images/Gobi Chilli.png",
-  "Gobi – Crispy / Schezwan / Pepper": "/images/Crispy Gobi.png",
-
-  // MUSHROOM STARTERS
-  "Mushroom – Chilli / 65 / Manchurian": "/images/Mushroom Chilli.png",
-  "Mushroom – Pepper / Crispy / Schezwan": "/images/Mushroom Pepper.png",
-
-  // CORN
-  "Crispy Corn": "/images/Crispy Corn.png",
-
-  // PANEER STARTERS
-  "Paneer – Chilli / 65 / Manchurian": "/images/Paneer Chilli.png",
-  "Paneer – Pepper / Crispy / Schezwan": "/images/Paneer Pepper.png",
-
-  // VEG MANCHURIAN
-  "Veg Manchurian": "/images/Veg Manchurian.png",
-  "Chilli / Schezwan Veg Manchurian": "/images/Chilli Veg Manchurian.png",
-  "Pepper / Garlic Veg Manchurian": "/images/Pepper Veg Manchurian.png",
-
-  // CHICKEN BBQ
-  "Tandoori Chicken": "/images/Tandoori Chicken.png",
-  "Spicy Chicken Tikka": "/images/Spicy Chicken Tikka.png",
-  "Malai Chicken Tikka": "/images/Malai Chicken Tikka.png",
-  "Spicy BBQ Leg": "/images/Spicy BBQ Leg.png",
-  "Spicy BBQ Wings": "/images/Spicy BBQ Wings.png",
-
-  // VEG BBQ
-  "Paneer Tikka": "/images/Paneer Tikka.png",
-  "Malai Paneer Tikka": "/images/Malai Paneer Tikka.png",
-  "Hariyali Paneer Tikka": "/images/Hariyali Paneer Tikka.png",
-  "Mushroom Tikka": "/images/Mushroom Tikka.png",
-  "Malai Mushroom Tikka": "/images/Malai Mushroom Tikka.png",
-  "Gobi Tikka": "/images/Gobi Tikka.png",
-  "Hariyali Gobi Tikka": "/images/Hariyali Gobi Tikka.png",
-
-  // FRIED RICE
-  "Veg Fried Rice": "/images/Veg Fried Rice.png",
-  "Egg Fried Rice": "/images/Egg Fried Rice.png",
-  "Chicken Fried Rice": "/images/Chicken Fried Rice.png",
-  "Schezwan Chicken Fried Rice": "/images/Schezwan Chicken Fried Rice.png",
-
-  // NOODLES
-  "Veg Noodles": "/images/Veg Noodles.png",
-  "Egg Noodles": "/images/Egg Noodles.png",
-  "Chicken Noodles": "/images/Chicken Noodles.png",
-  "Schezwan Chicken Noodles": "/images/Schezwan Chicken Noodles.png",
-
-  // VEGETARIAN CURRIES
-  "Paneer Butter Masala": "/images/Paneer Butter Masala.png",
-  "Kadai Paneer": "/images/Kadai Paneer.png",
-  "Mushroom Masala": "/images/Mushroom Masala.png",
-  "Kadai Mushroom": "/images/Kadai Mushroom.png",
-  "Kaju Masala": "/images/Kaju Masala.png",
-
-  // NON-VEGETARIAN CURRIES
-  "Andhra Chicken Curry": "/images/Andhra Chicken Curry.png",
-  "Butter Chicken / Kadai Chicken": "/images/Butter Chicken.png",
-  "Gongura Chicken Curry": "/images/Gongura Chicken Curry.png",
-  "Mutton Curry": "/images/Mutton Curry.png",
-  "Gongura Mutton Curry": "/images/Gongura Mutton Curry.png",
-  "Egg Masala": "/images/Egg Masala.png",
-
-  // BREADS
-  "Plain Naan": "/images/Plain Naan.png",
-  "Butter Naan": "/images/Butter Naan.png",
-  "Garlic Naan": "/images/Garlic Naan.png",
-  "Tandoori Roti": "/images/Tandoori Roti.png",
-  "Butter Tandoori Roti": "/images/Butter Tandoori Roti.png",
-  "Pulka": "/images/Pulka.png",
-};
-
-// PRODUCT HELPER
-const makeProducts = (
-  category,
-  mainHeading,
-  section,
-  sizeNames,
-  rows,
-  description
-) =>
-  rows.map(([name, prices], index) => ({
-    name,
-    category,
-    mainHeading,
-    section,
-    description:
-      description ||
-      `Freshly prepared ${name.toLowerCase()} with authentic Spice Soirée flavours.`,
-    image: images[name] || "",
-    prices: Object.fromEntries(
-      sizeNames.map((size, sizeIndex) => [
-        size,
-        Number(prices[sizeIndex]),
-      ])
-    ),
-    bestseller: category === "Biryani" && index === 0,
-  }));
-
-// ALL MENU PRODUCTS
-const products = [
-  // 1. BIRYANI
-  ...makeProducts(
-    "Biryani",
-    "",
-    "SIGNATURE BIRYANIS",
-    ["Single", "Regular", "Family"],
-    [
-      ["Chicken Dum Biryani", [169, 319, 629]],
-      ["Chicken Fry Piece Biryani", [199, 379, 749]],
-      ["Chicken 65 Biryani", [249, 479, 939]],
-      ["Paneer Biryani", [239, 459, 899]],
-      ["Mushroom Biryani", [229, 439, 859]],
-      ["Gongura Chicken Biryani", [249, 479, 929]],
-    ],
-    "Aromatic basmati rice prepared with authentic spices."
-  ),
-
-  // 2. STARTERS - CHICKEN STARTERS
-  ...makeProducts(
-    "Starters",
-    "",
-    "CHICKEN STARTERS",
-    ["Small", "Large"],
-    [
-      ["Chicken – 65 / Manchurian", [169, 299]],
-      ["Chicken – Chilli / Ginger", [179, 319]],
-      ["Chicken – Majestic / Pepper / Dragon / 555", [189, 329]],
-      ["Chicken Lollipop (3 pcs / 6 pcs)", [189, 349]],
-    ]
-  ),
-
-  // CHICKEN PAKODA
-  ...makeProducts(
-    "Starters",
-    "",
-    "CHICKEN PAKODA",
-    ["250g", "500g RAW CHICKEN"],
-    [
-      ["Bone-in Chicken Pakoda", [200, 360]],
-      ["Boneless Chicken Pakoda", [250, 460]],
-    ]
-  ),
-
-  // VEGETARIAN STARTERS - GOBI
-  ...makeProducts(
-    "Starters",
-    "VEGETARIAN STARTERS",
-    "GOBI SPECIALS",
-    ["Small", "Large"],
-    [
-      ["Gobi Manchurian", [109, 189]],
-      ["Gobi – Chilli / 65", [119, 199]],
-      ["Gobi – Crispy / Schezwan / Pepper", [129, 209]],
-    ]
-  ),
-
-  // MUSHROOM SPECIALS
-  ...makeProducts(
-    "Starters",
-    "VEGETARIAN STARTERS",
-    "MUSHROOM SPECIALS",
-    ["Small", "Large"],
-    [
-      ["Mushroom – Chilli / 65 / Manchurian", [159, 279]],
-      ["Mushroom – Pepper / Crispy / Schezwan", [169, 289]],
-    ]
-  ),
-
-  // CORN SPECIAL
-  ...makeProducts(
-    "Starters",
-    "VEGETARIAN STARTERS",
-    "CORN SPECIAL",
-    ["Small", "Large"],
-    [
-      ["Crispy Corn", [139, 239]],
-    ]
-  ),
-
-  // PANEER SPECIALS
-  ...makeProducts(
-    "Starters",
-    "VEGETARIAN STARTERS",
-    "PANEER SPECIALS",
-    ["Small", "Large"],
-    [
-      ["Paneer – Chilli / 65 / Manchurian", [189, 329]],
-      ["Paneer – Pepper / Crispy / Schezwan", [199, 339]],
-    ]
-  ),
-
-  // VEG MANCHURIAN SPECIALS
-  ...makeProducts(
-    "Starters",
-    "VEGETARIAN STARTERS",
-    "VEG MANCHURIAN SPECIALS",
-    ["Small", "Large"],
-    [
-      ["Veg Manchurian", [119, 199]],
-      ["Chilli / Schezwan Veg Manchurian", [129, 209]],
-      ["Pepper / Garlic Veg Manchurian", [129, 209]],
-    ]
-  ),
-
-  // 3. BBQ & TANDOORI - CHICKEN
-  ...makeProducts(
-    "BBQ & Tandoor",
-    "CHICKEN BBQ & TANDOORI",
-    "CHICKEN BBQ & TANDOORI",
-    ["Half", "Full"],
-    [
-      ["Tandoori Chicken", [299, 549]],
-    ]
-  ),
-
-  ...makeProducts(
-    "BBQ & Tandoori",
-    "",
-    "CHICKEN BBQ & TANDOORI",
-    ["6 pcs", "12 pcs"],
-    [
-      ["Spicy Chicken Tikka", [149, 279]],
-      ["Malai Chicken Tikka", [149, 279]],
-    ]
-  ),
-
-  ...makeProducts(
-    "BBQ & Tandoori",
-    "CHICKEN BBQ & TANDOORI",
-    "CHICKEN BBQ & TANDOORI",
-    ["1 pc", "3 pcs"],
-    [
-      ["Spicy BBQ Leg", [99, 279]],
-    ]
-  ),
-
-  ...makeProducts(
-    "BBQ & Tandoori",
-    "CHICKEN BBQ & TANDOORI",
-    "CHICKEN BBQ & TANDOORI",
-    ["3 pcs", "6 pcs"],
-    [
-      ["Spicy BBQ Wings", [149, 289]],
-    ]
-  ),
-
-  // VEG BBQ
-  ...makeProducts(
-    "BBQ & Tandoori",
-    "VEG BBQ",
-    "VEG BBQ",
-    ["6 PCS", "12 PCS"],
-    [
-      ["Paneer Tikka", [199, 379]],
-      ["Malai Paneer Tikka", [219, 399]],
-      ["Hariyali Paneer Tikka", [209, 389]],
-      ["Mushroom Tikka", [159, 299]],
-      ["Malai Mushroom Tikka", [169, 319]],
-      ["Gobi Tikka", [129, 239]],
-      ["Hariyali Gobi Tikka", [139, 259]],
-    ]
-  ),
-
-  // 4. CHINESE - FRIED RICE
-  ...makeProducts(
-    "Chinese",
-    "",
-    "FRIED RICE • BASMATI",
-    ["Single", "Full"],
-    [
-      ["Veg Fried Rice", [109, 159]],
-      ["Egg Fried Rice", [129, 179]],
-      ["Chicken Fried Rice", [159, 219]],
-      ["Schezwan Chicken Fried Rice", [179, 249]],
-    ]
-  ),
-
-  // NOODLES
-  ...makeProducts(
-    "Chinese",
-    "",
-    "NOODLES",
-    ["Single", "Full"],
-    [
-      ["Veg Noodles", [99, 159]],
-      ["Egg Noodles", [119, 179]],
-      ["Chicken Noodles", [129, 189]],
-      ["Schezwan Chicken Noodles", [139, 199]],
-    ]
-  ),
-
-  // 5. INDIAN CURRIES - VEGETARIAN
-  ...makeProducts(
-    "Indian Curries",
-    "",
-    "VEGETARIAN CURRIES",
-    ["Half", "Full"],
-    [
-      ["Paneer Butter Masala", [169, 289]],
-      ["Kadai Paneer", [179, 299]],
-      ["Mushroom Masala", [149, 249]],
-      ["Kadai Mushroom", [159, 269]],
-      ["Kaju Masala", [189, 329]],
-    ]
-  ),
-
-  // NON-VEGETARIAN CURRIES
-  ...makeProducts(
-    "Indian Curries",
-    "",
-    "NON-VEGETARIAN CURRIES",
-    ["Half", "Full"],
-    [
-      ["Andhra Chicken Curry", [179, 299]],
-      ["Butter Chicken / Kadai Chicken", [199, 349]],
-      ["Gongura Chicken Curry", [199, 349]],
-      ["Mutton Curry", [299, 499]],
-      ["Gongura Mutton Curry", [329, 549]],
-      ["Egg Masala", [119, 199]],
-    ]
-  ),
-
-  // 6. BREADS
-  ...makeProducts(
-    "Breads",
-    "",
-    "",
-    ["Price"],
-    [
-      ["Plain Naan", [39]],
-      ["Butter Naan", [49]],
-      ["Garlic Naan", [59]],
-      ["Tandoori Roti", [29]],
-      ["Butter Tandoori Roti", [39]],
-      ["Pulka", [15]],
-    ]
-  ),
-];
 
 // MENU COMPONENT
 function Menu() {
   const location = useLocation();
 
-  const [activeCategory, setActiveCategory] = useState(
-    categories.some(
-      (category) => category.name === location.state?.category
-    )
-      ? location.state.category
-      : "Biryani"
-  );
+  const { data, loading, error } = useApi("/menu");
+  const categories = [...(data?.categories || []), { name: "All Items", icon: "▦" }];
+  const products = data?.items || [];
+  const [activeCategory, setActiveCategory] = useState(location.state?.category || "Biryani");
 
   const [selectedSizes, setSelectedSizes] = useState({});
   const [cart, setCart] = useState(readCart);
@@ -414,7 +39,13 @@ function Menu() {
     ) {
       setActiveCategory(selectedCategory);
     }
-  }, [location.key, location.state]);
+  }, [location.key, location.state, data]);
+
+  useEffect(() => {
+    if (data && activeCategory !== "All Items" && !data.categories.some((category) => category.name === activeCategory)) {
+      setActiveCategory("All Items");
+    }
+  }, [data, activeCategory]);
 
   // FILTER PRODUCTS
   const filteredProducts =
@@ -427,25 +58,24 @@ function Menu() {
   // ADD TO HEADER CART
   function addToCart(product) {
     const size =
-      selectedSizes[product.name] ||
+      selectedSizes[product.id] ||
       Object.keys(product.prices)[0];
 
+    if (!product.inStock || !size) return;
     const price = product.prices[size];
 
     const previousCart = readCart();
 
     const existing = previousCart.find(
       (item) =>
-        item.name === product.name &&
-        item.size === size
+        item.itemType === "menu" && item.itemId === product.id && item.size === size
     );
 
     let updatedCart;
 
     if (existing) {
       updatedCart = previousCart.map((item) =>
-        item.name === product.name &&
-        item.size === size
+        item.itemType === "menu" && item.itemId === product.id && item.size === size
           ? {
               ...item,
               quantity: Number(item.quantity || 0) + 1,
@@ -456,6 +86,8 @@ function Menu() {
       updatedCart = [
         ...previousCart,
         {
+          itemType: "menu",
+          itemId: product.id,
           name: product.name,
           size,
           price,
@@ -471,12 +103,12 @@ function Menu() {
   function decreaseQuantity(product, size) {
     const updatedCart = readCart()
       .map((item) =>
-        item.name === product.name && item.size === size
+        item.itemType === "menu" && item.itemId === product.id && item.size === size
           ? { ...item, quantity: Number(item.quantity || 0) - 1 }
           : item
       )
       .filter((item) =>
-        item.name !== product.name || item.size !== size || Number(item.quantity) > 0
+        item.itemType !== "menu" || item.itemId !== product.id || item.size !== size || Number(item.quantity) > 0
       );
     saveCart(updatedCart);
   }
@@ -502,9 +134,9 @@ function Menu() {
     const sizeNames = Object.keys(product.prices);
 
     const selectedSize =
-      selectedSizes[product.name] || sizeNames[0];
+      selectedSizes[product.id] || sizeNames[0];
     const cartItem = cart.find(
-      (item) => item.name === product.name && item.size === selectedSize
+      (item) => item.itemType === "menu" && item.itemId === product.id && item.size === selectedSize
     );
     const quantity = Number(cartItem?.quantity || 0);
 
@@ -566,7 +198,7 @@ function Menu() {
                 onClick: () =>
                   setSelectedSizes((previous) => ({
                     ...previous,
-                    [product.name]: size,
+                    [product.id]: size,
                   })),
               },
 
@@ -576,7 +208,7 @@ function Menu() {
           )
         ),
 
-        quantity > 0 ? h(
+        !product.inStock ? h("button", { className: "menu-add-cart", disabled: true }, "Out of Stock") : quantity > 0 ? h(
           "div",
           { className: "menu-quantity", "aria-label": `${product.name}, ${selectedSize} quantity` },
           h("button", { type: "button", onClick: () => decreaseQuantity(product, selectedSize), "aria-label": `Remove one ${product.name}, ${selectedSize}` }, "−"),
@@ -744,7 +376,7 @@ function Menu() {
           "div",
           { className: "menu-sidebar-list" },
 
-          categories.slice(0, 6).map((category) =>
+          categories.filter((category) => category.name !== "All Items").map((category) =>
             h(
               "button",
               {
@@ -787,19 +419,7 @@ function Menu() {
           h(
             "h2",
             null,
-            activeCategory === "All Items"
-              ? "ALL RESTAURANT ITEMS"
-              : activeCategory === "Biryani"
-              ? "SIGNATURE BIRYANIS"
-              : activeCategory === "Starters"
-              ? "OUR STARTERS"
-              : activeCategory === "BBQ & Tandoori"
-              ? "BBQ & TANDOORI"
-              : activeCategory === "Chinese"
-              ? "FRIED RICE & NOODLES"
-              : activeCategory === "Indian Curries"
-              ? "INDIAN CURRIES"
-              : "INDIAN BREADS"
+            activeCategory === "All Items" ? "ALL RESTAURANT ITEMS" : (categories.find((category) => category.name === activeCategory)?.pageHeading || activeCategory)
           ),
 
           h("span", null, "〰")
@@ -812,7 +432,7 @@ function Menu() {
         ),
 
         // PRODUCT GROUPS
-        filteredProducts.length
+        loading ? h("p", { className: "menu-empty" }, "Loading menu...") : error ? h("p", { className: "menu-empty", role: "alert" }, "Unable to load the menu. Please try again later.") : filteredProducts.length
           ? renderProductGroups()
           : h(
               "p",

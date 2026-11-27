@@ -1,127 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import CartQuantity, { useCartItems } from "./CartQuantity";
+import { readCart, saveCart, useApi } from "../api";
 import "./FreshMeatEggs.css";
-
-const CART_KEY = "spice_soiree_cart";
-
-const products = [
-  {
-    id: 1,
-    name: "Fresh Chicken",
-    subtitle: "(Whole)",
-    price: 270,
-    displayPrice: "₹270 / kg",
-    category: "Chicken",
-    image: "/images/fresh-chicken.png",
-    unit: "kg",
-    cuttingAllowed: true,
-    cuttingOptions: [
-      "Curry Cut - Small",
-      "Curry Cut - Medium",
-      "Biryani Cut - 60g",
-      "Biryani Cut - 120g",
-      "Leg Piece - Whole",
-      "Leg Piece - Cut",
-      "Liver / Gizzards",
-    ],
-  },
-  {
-    id: 2,
-    name: "Boneless Chicken",
-    subtitle: "(Breast)",
-    price: 500,
-    displayPrice: "₹500 / kg",
-    category: "Boneless Chicken",
-    image: "/images/boneless-chicken.png",
-    unit: "kg",
-    cuttingAllowed: true,
-    cuttingOptions: [
-      "Breast - Pieces",
-      "Breast - Boneless",
-    ],
-  },
-  {
-    id: 3,
-    name: "Fresh Mutton",
-    subtitle: "(Curry Cut)",
-    price: 1100,
-    displayPrice: "₹1,100 / kg",
-    category: "Mutton",
-    image: "/images/fresh-mutton.png",
-    unit: "kg",
-    cuttingAllowed: true,
-    cuttingOptions: [
-      "Curry Cut - Small",
-      "Curry Cut - Medium",
-      "Biryani Cut - 60g",
-      "Biryani Cut - 120g",
-      "Leg Piece - Whole",
-      "Leg Piece - Cut",
-    ],
-  },
-  {
-    id: 4,
-    name: "Mutton Keema",
-    subtitle: "(Minced)",
-    price: 1500,
-    displayPrice: "₹1,500 / kg",
-    category: "Mutton Keema",
-    image: "/images/mutton-keema.png",
-    unit: "kg",
-    cuttingAllowed: false,
-    cuttingOptions: [],
-  },
-  {
-    id: 5,
-    name: "Fresh Eggs",
-    subtitle: "(Tray – 30 Eggs)",
-    price: 180,
-    displayPrice: "₹180 – ₹270 / tray",
-    category: "Eggs",
-    image: "/images/fresh-eggs.png",
-    unit: "tray",
-    cuttingAllowed: false,
-    cuttingOptions: [],
-  },
-];
-
-const categories = [
-  { name: "Chicken", icon: "🐓" },
-  { name: "Boneless Chicken", icon: "🥩" },
-  { name: "Mutton", icon: "🐐" },
-  { name: "Mutton Keema", icon: "🍲" },
-  { name: "Eggs", icon: "🥚" },
-  { name: "Cutting Options", icon: "✂️" },
-];
-
-const cuttingOptions = [
-  {
-    name: "Curry Cut",
-    subtitle: "Small / Medium pieces",
-    image: "/images/curry-cut.png",
-  },
-  {
-    name: "Biryani Cut",
-    subtitle: "60g / 120g pieces",
-    image: "/images/biryani-cut.png",
-  },
-  {
-    name: "Leg Piece",
-    subtitle: "Whole / Cut",
-    image: "/images/leg-piece.png",
-  },
-  {
-    name: "Breast",
-    subtitle: "Pieces / Boneless",
-    image: "/images/chicken-breast.png",
-  },
-  {
-    name: "Liver / Gizzards",
-    subtitle: "As per availability",
-    image: "/images/liver-gizzards.png",
-  },
-];
 
 export default function FreshMeat() {
   const location = useLocation();
@@ -146,6 +27,10 @@ export default function FreshMeat() {
     getCategoryFromPath
   );
 
+  const { data, loading, error } = useApi("/fresh-meat");
+  const products = data?.products || [];
+  const cuttingOptions = data?.cuttingStyles || [];
+  const categories = [...(data?.categories || []), { name: "Cutting Options", icon: "✂" }];
   const [selectedCuts, setSelectedCuts] = useState({});
   const cart = useCartItems();
   const [addedMessage, setAddedMessage] = useState("");
@@ -189,21 +74,13 @@ export default function FreshMeat() {
       return;
     }
 
-    let cart = [];
-
-    try {
-      const savedCart = JSON.parse(
-        localStorage.getItem(CART_KEY) || "[]"
-      );
-
-      cart = Array.isArray(savedCart) ? savedCart : [];
-    } catch {
-      cart = [];
-    }
-
+    if (!product.inStock) return;
+    const cart = readCart();
     const newItem = {
+      itemType: "meat",
+      itemId: product.id,
       name: product.name,
-      size: product.subtitle.replace(/[()]/g, ""),
+      size: (product.subtitle || "").replace(/[()]/g, ""),
       price: Number(product.price),
       quantity: 1,
       image: product.image,
@@ -213,7 +90,7 @@ export default function FreshMeat() {
 
     const existingIndex = cart.findIndex(
       (item) =>
-        item.name === newItem.name &&
+        item.itemType === "meat" && item.itemId === product.id &&
         item.size === newItem.size &&
         (item.cuttingOption || "") === newItem.cuttingOption
     );
@@ -228,9 +105,7 @@ export default function FreshMeat() {
       cart.push(newItem);
     }
 
-    localStorage.setItem(CART_KEY, JSON.stringify(cart));
-
-    window.dispatchEvent(new Event("cartUpdated"));
+    saveCart(cart);
 
     setAddedMessage(
       `${product.name} - ${selectedCut || "Regular"} added to cart!`
@@ -354,6 +229,10 @@ export default function FreshMeat() {
             </div>
           )}
 
+          {loading && <p>Loading products...</p>}
+          {error && <p role="alert">Unable to load products. Please try again later.</p>}
+          {!loading && !error && activeCategory !== "Cutting Options" && visibleProducts.length === 0 && <p>No products available in this category.</p>}
+
           {/* PRODUCT GRID */}
           {activeCategory !== "Cutting Options" && (
             <div className="fm-product-grid">
@@ -361,8 +240,8 @@ export default function FreshMeat() {
               {visibleProducts.map((product) => {
                 const selectedCut = selectedCuts[product.id] || "";
                 const cartItem = cart.find((line) =>
-                  line.name === product.name &&
-                  line.size === product.subtitle.replace(/[()]/g, "") &&
+                  line.itemType === "meat" && line.itemId === product.id &&
+                  line.size === (product.subtitle || "").replace(/[()]/g, "") &&
                   (line.cuttingOption || "") === selectedCut
                 );
                 return (
@@ -424,7 +303,9 @@ export default function FreshMeat() {
                       </div>
                     )}
 
-                    {cartItem && Number(cartItem.quantity) > 0 ? (
+                    {!product.inStock ? (
+                      <button className="fm-order-btn" type="button" disabled>Out of Stock</button>
+                    ) : cartItem && Number(cartItem.quantity) > 0 ? (
                       <CartQuantity item={cartItem} onIncrease={() => addToCart(product)} />
                     ) : <button
                       className="fm-order-btn"
